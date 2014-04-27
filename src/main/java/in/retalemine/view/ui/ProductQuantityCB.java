@@ -1,14 +1,15 @@
 package in.retalemine.view.ui;
 
+import in.retalemine.util.RegExUtil;
 import in.retalemine.util.UnitUtil;
 import in.retalemine.view.constants.UIconstants;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.measure.Measure;
+import javax.measure.converter.ConversionException;
 import javax.measure.quantity.Quantity;
 
 import org.slf4j.Logger;
@@ -16,11 +17,23 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 public class ProductQuantityCB extends ComboBox {
 
@@ -37,6 +50,7 @@ public class ProductQuantityCB extends ComboBox {
 		setFilteringMode(FilteringMode.STARTSWITH);
 		setRequired(true);
 		setNullSelectionAllowed(true);
+		// TODO check iscontiner actually used in code
 		setContainerDataSource(new BeanItemContainer<Measure<Double, ? extends Quantity>>(
 				Measure.class));
 		setItemCaptionMode(AbstractSelect.ItemCaptionMode.ID);
@@ -57,47 +71,166 @@ public class ProductQuantityCB extends ComboBox {
 
 			@Override
 			public void addNewItem(String newQuantity) {
-				Measure<Double, ? extends Quantity> quantity;
+				String[] quantitySplit = null;
+				javax.measure.unit.Unit<?> newUnit = null;
+				Measure<Double, ? extends Quantity> quantity = null;
 				try {
 					quantity = Measure.valueOf(
 							Double.parseDouble(newQuantity.trim()), unit);
 					addItem(quantity);
 					setValue(quantity);
 				} catch (NumberFormatException e) {
-					quantity = parseQuantity(newQuantity);
-					if (null == quantity) {
-						Notification.show("Invalid Quantity", newQuantity,
-								Type.TRAY_NOTIFICATION);
-						setValue(null);
-						focus();
+					quantitySplit = RegExUtil.resolveQuantity(newQuantity);
+					if (null != quantitySplit) {
+						String validUnit = null;
+						if (null != (validUnit = UnitUtil
+								.getValidUnit(quantitySplit[1]))) {
+							newUnit = javax.measure.unit.Unit
+									.valueOf(validUnit);
+							try {
+								unit.getConverterTo(newUnit);
+							} catch (ConversionException ce) {
+								if(!UnitUtil.unitList.get(UnitUtil.unitList.size()-1).contains(newUnit.toString())){
+									displayModal(Double
+											.parseDouble(quantitySplit[0]));	
+								}
+							}
+							quantity = Measure.valueOf(
+									Double.parseDouble(quantitySplit[0]),
+									newUnit);
+							addItem(quantity);
+							setValue(quantity);
+						} else {
+							displayModal(Double.parseDouble(quantitySplit[0]));
+						}
 					} else {
-						addItem(quantity);
-						setValue(quantity);
+						displayModal(1);
 					}
 				}
 			}
 
-			private Measure<Double, ? extends Quantity> parseQuantity(
-					String newQuantity) {
-				Matcher quantityMatcher = Pattern.compile("(([0-9]+)(.*))")
-						.matcher(newQuantity.trim().replaceAll("\\s+", " "));
-				if (quantityMatcher.matches()
-						&& 3 == quantityMatcher.groupCount()) {
-					String quantity = quantityMatcher.group(2);
-					String unit = UnitUtil.getValidUnit(quantityMatcher.group(3).trim().toLowerCase());
+		});
+	}
 
-					logger.debug("Parsed Quantity-${}$",
-							quantityMatcher.group(1));
+	protected void displayModal(double quantity) {
+		Window sub = new Window("Enter Quantity and Unit");
 
-					return Measure.valueOf(Double.parseDouble(quantity),
-							javax.measure.unit.Unit.valueOf(unit));
-				} else {
-					logger.error("Parsed Quantity-${}$",
-							quantityMatcher.group(1));
-					return null;
+		VerticalLayout vForm = new VerticalLayout();
+		HorizontalLayout hContent = new HorizontalLayout();
+		Button submit = new Button("Submit");
+
+		Label quantityLB = new Label("Quantity : ");
+		final TextField quantityTF = new TextField();
+		final ComboBox quantityUnitCB = new ComboBox(null,
+				UnitUtil.getValidAltUnitList(unit.toString()));
+
+		quantityLB.setImmediate(false);
+
+		quantityTF.setInputPrompt("Quantity");
+		quantityTF.setWidth("100%");
+		quantityTF.setConverter(new StringToDoubleConverter());
+		quantityTF.setValue(String.valueOf(quantity));
+
+		quantityUnitCB.setInputPrompt("Unit");
+		quantityUnitCB.setFilteringMode(FilteringMode.CONTAINS);
+		quantityUnitCB.setNullSelectionAllowed(true);
+		quantityUnitCB.setWidth("100%");
+		quantityUnitCB.setImmediate(true);
+		quantityUnitCB.setNewItemsAllowed(true);
+		quantityUnitCB.setNewItemHandler(new NewItemHandler() {
+
+			private static final long serialVersionUID = 399742240123844605L;
+
+			@Override
+			public void addNewItem(String newUnit) {
+				String validUnit = null;
+				if (null != (validUnit = UnitUtil.getValidUnit(newUnit))) {
+					Iterator<?> iterator = quantityUnitCB.getItemIds()
+							.iterator();
+					while (iterator.hasNext()) {
+						String item = (String) iterator.next();
+						if (item.equals(validUnit)) {
+							quantityUnitCB.setValue(item);
+							return;
+						}
+					}
+				}
+				quantityUnitCB.setValue(null);
+			}
+		});
+
+		hContent.setImmediate(false);
+		hContent.setWidth("100%");
+		hContent.setMargin(false);
+		hContent.setSpacing(true);
+		hContent.addComponent(quantityLB);
+		hContent.addComponent(quantityTF);
+		hContent.addComponent(quantityUnitCB);
+		hContent.setExpandRatio(quantityLB, .5f);
+		hContent.setExpandRatio(quantityTF, .75f);
+		hContent.setExpandRatio(quantityUnitCB, 1f);
+
+		vForm.setImmediate(false);
+		vForm.setWidth("100%");
+		vForm.setMargin(true);
+		vForm.setSpacing(true);
+		vForm.addComponent(hContent);
+		vForm.addComponent(submit);
+		vForm.setComponentAlignment(submit, Alignment.MIDDLE_RIGHT);
+
+		sub.setContent(vForm);
+		sub.setModal(true);
+		sub.setWidth("30%");
+		sub.setResizable(false);
+		sub.addActionHandler(new Handler() {
+
+			private static final long serialVersionUID = 4470126167093872862L;
+			Action actionEsc = new ShortcutAction("Close Modal Box",
+					ShortcutAction.KeyCode.ESCAPE, null);
+
+			@Override
+			public void handleAction(Action action, Object sender, Object target) {
+				if (sender instanceof Window) {
+					if (action == actionEsc) {
+						((Window) sender).close();
+					}
+				}
+			}
+
+			@Override
+			public Action[] getActions(Object target, Object sender) {
+				return new Action[] { actionEsc };
+			}
+		});
+
+		submit.setImmediate(true);
+		submit.addClickListener(new ClickListener() {
+
+			private static final long serialVersionUID = 8518609553777583947L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Object parent;
+				if ((parent = event.getComponent().getParent().getParent()) instanceof Window) {
+					if (null != quantityTF.getValue()
+							&& !quantityTF.getValue().trim().isEmpty()
+							&& null != quantityUnitCB.getValue()
+							&& !((String) quantityUnitCB.getValue()).trim()
+									.isEmpty()) {
+						((Window) parent).close();
+						logger.info("window closed!! {}",quantityUnitCB.getValue());
+						getNewItemHandler().addNewItem(
+								quantityTF.getValue()
+										+ quantityUnitCB.getValue());
+					} else {
+						// TODO display error msg to update every field
+					}
 				}
 			}
 		});
+
+		UI.getCurrent().addWindow(sub);
+		quantityTF.focus();
 	}
 
 	public void setUnit(javax.measure.unit.Unit<? extends Quantity> unit) {
@@ -119,11 +252,6 @@ public class ProductQuantityCB extends ComboBox {
 				getContainerDataSource().addItem(
 						Measure.valueOf(Double.parseDouble(newFilter),
 								this.unit));
-				// if (this.unit instanceof BaseUnit) {
-				// getContainerDataSource().addItem(
-				// Measure.valueOf(Double.parseDouble(newFilter),
-				// this.unit.getStandardUnit()));
-				// }
 				logger.info("new value suggested {}", newFilter);
 			} catch (NumberFormatException e) {
 				getContainerDataSource().removeAllItems();

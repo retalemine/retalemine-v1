@@ -6,7 +6,6 @@ import in.retalemine.util.Rupee;
 import in.retalemine.util.UnitUtil;
 import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.VO.ProductVO;
-import in.retalemine.view.constants.UIconstants;
 import in.retalemine.view.converter.AmountConverter;
 import in.retalemine.view.ui.ProductQuantityCB;
 
@@ -118,6 +117,7 @@ public class BillingComponent extends CustomComponent {
 	private final String PID_SERIAL_NO = "serialNo";
 	private final String PID_PRODUCT_NAME = "productName";
 	private final String PID_PRODUCT_UNIT = "productUnit";
+	private final String PID_PRODUCT_DESCRIPTION = "productDescription";
 	private final String PID_UNIT_RATE = "unitPrice";
 	private final String PID_QUANTITY = "quantity";
 	private final String PID_AMOUNT = "amount";
@@ -431,7 +431,7 @@ public class BillingComponent extends CustomComponent {
 		billableItemsTB.addContainerProperty(PID_PRODUCT_UNIT, Measure.class,
 				0.0, PRODUCT_UNIT, null, null);
 		billableItemsTB.addContainerProperty(PID_UNIT_RATE, Amount.class, 0.0,
-				UNIT_RATE, null, null);
+				UNIT_RATE, null, Align.RIGHT);
 		billableItemsTB.addContainerProperty(PID_QUANTITY,
 				javax.measure.unit.Unit.class, "1", QUANTITY, null, null);
 		billableItemsTB.addContainerProperty(PID_AMOUNT, Amount.class, 0.0,
@@ -449,7 +449,7 @@ public class BillingComponent extends CustomComponent {
 		billableItemsTB.setColumnExpandRatio(PID_PRODUCT_NAME, 18);
 		billableItemsTB.setColumnExpandRatio(PID_PRODUCT_UNIT, 4);
 		billableItemsTB.setColumnExpandRatio(PID_UNIT_RATE, 4);
-		billableItemsTB.setColumnExpandRatio(PID_QUANTITY, 2);
+		billableItemsTB.setColumnExpandRatio(PID_QUANTITY, 4);
 		billableItemsTB.setColumnExpandRatio(PID_AMOUNT, 6);
 
 		billableItemsTB.setSizeFull();
@@ -579,21 +579,14 @@ public class BillingComponent extends CustomComponent {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				if (null != productNameCB.getValue()
-						&& null != productRateCB.getValue()
-						&& null != quantityCB.getValue()) {
-					logger.info("Cart BT enabled");
-					addToCartBT.setEnabled(true);
-					addToCartBT.focus();
-				} else {
-					logger.info("Cart BT disabled");
-					addToCartBT.setEnabled(false);
-				}
 				Property<?> property = event.getProperty();
 				if (property instanceof ComboBox && null != property.getValue()) {
 					if (property.getValue() instanceof ProductVO<?>) {
 						ProductVO<? extends Quantity> productVO = (ProductVO<? extends Quantity>) property
 								.getValue();
+						Notification.show("Value change event",
+								productVO.getProductDescription(),
+								Type.TRAY_NOTIFICATION);
 						logger.info("Value change event {}",
 								productVO.getProductDescription());
 						BeanItemContainer<Amount<Money>> rateContainer = (BeanItemContainer<Amount<Money>>) productRateCB
@@ -608,12 +601,25 @@ public class BillingComponent extends CustomComponent {
 						quantityCB.getContainerDataSource().removeAllItems();
 						quantityCB
 								.setUnit(productVO.getProductUnit().getUnit());
-					} else if (property.getValue() instanceof Measure) {
-						Measure<Double, ? extends Quantity> quantity = (Measure<Double, ? extends Quantity>) property
-								.getValue();
-						logger.info("Value change event {}", quantity);
-
 					}
+				}
+				if (null != productNameCB.getValue()) {
+					if (null != productRateCB.getValue()
+							&& null != quantityCB.getValue()) {
+						logger.info("Cart BT enabled");
+						addToCartBT.setEnabled(true);
+						addToCartBT.focus();
+					} else {
+						logger.info("Cart BT disabled");
+						addToCartBT.setEnabled(false);
+					}
+				} else {
+					BeanItemContainer<Amount<Money>> rateContainer = (BeanItemContainer<Amount<Money>>) productRateCB
+							.getContainerDataSource();
+					rateContainer.removeAllItems();
+					productRateCB.setValue(null);
+					logger.info("Cart BT disabled and rate reset");
+					addToCartBT.setEnabled(false);
 				}
 			}
 		};
@@ -630,7 +636,7 @@ public class BillingComponent extends CustomComponent {
 		productNameCB
 				.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
 		productNameCB
-				.setItemCaptionPropertyId(UIconstants.PROPERTY_ID_PRODUCT_NAME);
+				.setItemCaptionPropertyId(PID_PRODUCT_DESCRIPTION);
 		productNameCB.setImmediate(true);
 		productNameCB.setNewItemsAllowed(true);
 		productNameCB.setNewItemHandler(new NewItemHandler() {

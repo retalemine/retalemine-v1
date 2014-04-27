@@ -3,7 +3,6 @@ package in.retalemine.view.constants;
 public interface UIconstants {
 	
 	public static final String PROMPT_PRODUCT_NAME = "Product Name";
-	public static final String PROPERTY_ID_PRODUCT_NAME = "productDescription";
 	public static final String PROMPT_PRODUCT_RATE = "Rate";
 	public static final String PROMPT_QUANTITY = "Quantity";
 	public static final String ADD_TO_CART = "Add To Cart";
