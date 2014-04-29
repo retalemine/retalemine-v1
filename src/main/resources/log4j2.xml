@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Appenders>
-		<File name="fileAppender" fileName="mvnweb-vaadin.log"
+		<File name="fileAppender" fileName="retalemine-v1.log"
 			append="false">
 			<PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
 		</File>
