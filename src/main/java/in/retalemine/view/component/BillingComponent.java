@@ -86,6 +86,8 @@ public class BillingComponent extends CustomComponent {
 	private VerticalLayout mainLayout;
 
 	private DateField billDateDF = new DateField();
+	private WebBrowser webBrowser = null;
+	private SimpleTimeZone clientTZ = null;
 
 	private Table billableItemsTB = new Table();
 
@@ -804,7 +806,8 @@ public class BillingComponent extends CustomComponent {
 	}
 
 	protected void resetBillingComponent() {
-		billDateDF.setValue(new Date());
+		billDateDF.setValue(webBrowser.getCurrentDate());
+		billDateDF.setTimeZone(clientTZ);
 		resetAddToCart();
 		billableItemsTB.getContainerDataSource().removeAllItems();
 		updateBillingPayments(null, 0);
@@ -1428,9 +1431,12 @@ public class BillingComponent extends CustomComponent {
 		FormLayout dateFL = new FormLayout();
 		TextField dateTF = new TextField(DATE);
 
+		webBrowser = Page.getCurrent().getWebBrowser();
+		clientTZ = new SimpleTimeZone(webBrowser.getTimezoneOffset(), "");
+		billDateDF.setTimeZone(clientTZ);
+		billDateDF.setValue(webBrowser.getCurrentDate());
 		logoLB.setValue("Retale(M)ine Billing Solution");
 		logoLB.setWidth("100%");
-		billDateDF.setValue(new Date());
 		dateTF.setPropertyDataSource(billDateDF);
 		dateTF.setReadOnly(true);
 		dateTF.setWidth("100%");
