@@ -1,13 +1,13 @@
 package in.retalemine.view.component;
 
-import in.retalemine.util.RegExUtil;
-import in.retalemine.util.RetaSI;
-import in.retalemine.util.Rupee;
-import in.retalemine.util.UnitUtil;
+//import in.retalemine.util.RegExUtil;
+//import in.retalemine.util.RetaSI;
+//import in.retalemine.util.Rupee;
+//import in.retalemine.util.UnitUtil;
 import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.VO.ProductVO;
 import in.retalemine.view.converter.AmountConverter;
-import in.retalemine.view.ui.ProductQuantityCB;
+//import in.retalemine.view.ui.ProductQuantityCB;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -76,9 +76,9 @@ public class BillingComponent extends CustomComponent {
 
 	private static final long serialVersionUID = -5001424944545200006L;
 
-	static {
-		RetaSI.getInstance();
-	}
+//	static {
+//		RetaSI.getInstance();
+//	}
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(BillingComponent.class);
@@ -104,7 +104,7 @@ public class BillingComponent extends CustomComponent {
 
 	private ComboBox productNameCB = new ComboBox();
 	private ComboBox productRateCB = new ComboBox();
-	private ProductQuantityCB quantityCB = new ProductQuantityCB();
+//	private ProductQuantityCB quantityCB = new ProductQuantityCB();
 	private Button addToCartBT = new Button();
 	private Button billMeBT = new Button();
 	private Button resetBT = new Button();
@@ -155,7 +155,7 @@ public class BillingComponent extends CustomComponent {
 	}
 
 	public static Currency getGlobalCurrency() {
-		return Rupee.INR;
+		return null;//Rupee.INR;
 	}
 
 	private VerticalLayout buildMainLayout() {
@@ -215,17 +215,17 @@ public class BillingComponent extends CustomComponent {
 
 		subTotalLB.setValue(SUB_TOTAL);
 		subTotalValueLB.setConverter(new AmountConverter());
-		subTotalValueLB
-				.setPropertyDataSource(new ObjectProperty<Amount<Money>>(Amount
-						.valueOf(0.0, Rupee.INR)));
+//		subTotalValueLB
+//				.setPropertyDataSource(new ObjectProperty<Amount<Money>>(Amount
+//						.valueOf(0.0, Rupee.INR)));
 		subTotalValueLB.setStyleName("v-align-right");
 		subTotalColonLB.setValue(COLON);
 		subTotalColonLB.setStyleName("v-align-right");
 
 		totalLB.setValue(TOTAL);
 		totalValueLB.setConverter(new AmountConverter());
-		totalValueLB.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(0.0, Rupee.INR)));
+//		totalValueLB.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+//				Amount.valueOf(0.0, Rupee.INR)));
 		totalValueLB.setStyleName("v-align-right");
 		totalColonLB.setValue(COLON);
 		totalColonLB.setStyleName("v-align-right");
@@ -235,34 +235,34 @@ public class BillingComponent extends CustomComponent {
 		taxTypeCB.setNullSelectionAllowed(true);
 		taxTypeCB.setWidth("100%");
 		taxTypeCB.setImmediate(true);
-		taxTypeCB.addValueChangeListener(new Property.ValueChangeListener() {
-
-			private static final long serialVersionUID = -2751845674814890015L;
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				Amount<Money> subTotalVal = (Amount<Money>) subTotalValueLB
-						.getPropertyDataSource().getValue();
-				Amount<Money> taxVal = Amount.valueOf(0.0, Rupee.INR);
-				if (null != event.getProperty().getValue()) {
-					taxVal = subTotalVal.times(
-							taxPercentageMap
-									.get(event.getProperty().getValue()))
-							.divide(100);
-					taxValueLB.getPropertyDataSource().setValue(taxVal);
-				} else {
-					taxValueLB.getPropertyDataSource().setValue(taxVal);
-
-				}
-				totalValueLB.getPropertyDataSource().setValue(
-						subTotalVal.plus(taxVal));
-			}
-		});
+//		taxTypeCB.addValueChangeListener(new Property.ValueChangeListener() {
+//
+//			private static final long serialVersionUID = -2751845674814890015L;
+//
+//			@SuppressWarnings("unchecked")
+//			@Override
+//			public void valueChange(ValueChangeEvent event) {
+//				Amount<Money> subTotalVal = (Amount<Money>) subTotalValueLB
+//						.getPropertyDataSource().getValue();
+//				Amount<Money> taxVal = Amount.valueOf(0.0, Rupee.INR);
+//				if (null != event.getProperty().getValue()) {
+//					taxVal = subTotalVal.times(
+//							taxPercentageMap
+//									.get(event.getProperty().getValue()))
+//							.divide(100);
+//					taxValueLB.getPropertyDataSource().setValue(taxVal);
+//				} else {
+//					taxValueLB.getPropertyDataSource().setValue(taxVal);
+//
+//				}
+//				totalValueLB.getPropertyDataSource().setValue(
+//						subTotalVal.plus(taxVal));
+//			}
+//		});
 
 		taxValueLB.setConverter(new AmountConverter());
-		taxValueLB.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(0.0, Rupee.INR)));
+//		taxValueLB.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+//				Amount.valueOf(0.0, Rupee.INR)));
 		taxValueLB.setStyleName("v-align-right");
 		taxColonLB.setValue(COLON);
 		taxColonLB.setStyleName("v-align-right");
@@ -460,8 +460,8 @@ public class BillingComponent extends CustomComponent {
 		amtReceived.setWidth("100%");
 		amtReceived.setStyleName("v-textfield-align-right");
 		amtReceived.setConverter(new AmountConverter());
-		amtReceived.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(0.0, Rupee.INR)));
+//		amtReceived.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+//				Amount.valueOf(0.0, Rupee.INR)));
 		amtReceived.setImmediate(true);
 		amtReceived.addFocusListener(new FocusListener() {
 
@@ -499,8 +499,8 @@ public class BillingComponent extends CustomComponent {
 		payBackAmt.setStyleName("v-textfield-align-right");
 		payBackAmt.setReadOnly(true);
 		payBackAmt.setConverter(new AmountConverter());
-		payBackAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(0.0, Rupee.INR)));
+//		payBackAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+//				Amount.valueOf(0.0, Rupee.INR)));
 
 		saveDraft.setCaption("Save Draft");
 		saveDraft.setSizeUndefined();
@@ -620,8 +620,8 @@ public class BillingComponent extends CustomComponent {
 		amtReceived.setWidth("100%");
 		amtReceived.setStyleName("v-textfield-align-right");
 		amtReceived.setConverter(new AmountConverter());
-		amtReceived.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(0.0, Rupee.INR)));
+//		amtReceived.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+//				Amount.valueOf(0.0, Rupee.INR)));
 		amtReceived.setImmediate(true);
 		amtReceived.addFocusListener(new FocusListener() {
 
@@ -659,8 +659,8 @@ public class BillingComponent extends CustomComponent {
 		payBackAmt.setStyleName("v-textfield-align-right");
 		payBackAmt.setReadOnly(true);
 		payBackAmt.setConverter(new AmountConverter());
-		payBackAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(0.0, Rupee.INR)));
+//		payBackAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+//				Amount.valueOf(0.0, Rupee.INR)));
 
 		printBill.setCaption("Print Bill");
 		printBill.setSizeUndefined();
@@ -896,10 +896,10 @@ public class BillingComponent extends CustomComponent {
 							productNameCB.setEnabled(false);
 							productRateCB.setValue(selectedItem
 									.getItemProperty(PID_UNIT_RATE).getValue());
-							quantityCB.addItem(selectedItem.getItemProperty(
-									PID_QUANTITY).getValue());
-							quantityCB.setValue(selectedItem.getItemProperty(
-									PID_QUANTITY).getValue());
+//							quantityCB.addItem(selectedItem.getItemProperty(
+//									PID_QUANTITY).getValue());
+//							quantityCB.setValue(selectedItem.getItemProperty(
+//									PID_QUANTITY).getValue());
 							addToCartBT.setCaption(UPDATE_CART);
 							addToCartBT.setEnabled(false);
 							billableItemsTB.focus();
@@ -1017,24 +1017,24 @@ public class BillingComponent extends CustomComponent {
 
 			@Override
 			public void addNewItem(String newProductName) {
-				String camelCasePName = RegExUtil
-						.getCamelCaseString(newProductName);
-				String[] result = RegExUtil.resolveProductUnit(camelCasePName);
-				if (null != result) {
-					String validUnit = null;
-					if (null != (validUnit = UnitUtil.getValidUnit(result[1]))) {
-						result[1] = validUnit;
-						ProductVO<? extends Quantity> productVO = populateProductVO(result);
-						productNameCBCTR.addBean(productVO);
-						productNameCB.setValue(productVO
-								.getProductDescription());
-						productRateCB.focus();
-					} else {
-						displayModal(result[2], Double.parseDouble(result[0]));
-					}
-				} else {
-					displayModal(camelCasePName, 1.0);
-				}
+//				String camelCasePName = RegExUtil
+//						.getCamelCaseString(newProductName);
+//				String[] result = RegExUtil.resolveProductUnit(camelCasePName);
+//				if (null != result) {
+//					String validUnit = null;
+//					if (null != (validUnit = UnitUtil.getValidUnit(result[1]))) {
+//						result[1] = validUnit;
+//						ProductVO<? extends Quantity> productVO = populateProductVO(result);
+//						productNameCBCTR.addBean(productVO);
+//						productNameCB.setValue(productVO
+//								.getProductDescription());
+//						productRateCB.focus();
+//					} else {
+//						displayModal(result[2], Double.parseDouble(result[0]));
+//					}
+//				} else {
+//					displayModal(camelCasePName, 1.0);
+//				}
 			}
 		});
 		productNameCB.addValueChangeListener(new ValueChangeListener() {
@@ -1055,13 +1055,13 @@ public class BillingComponent extends CustomComponent {
 					BeanItemContainer<Amount<Money>> rateContainer = (BeanItemContainer<Amount<Money>>) productRateCB
 							.getContainerDataSource();
 					rateContainer.removeAllItems();
-					logger.info("price list {}", productVO.getUnitPrices());
-					if (null != productVO.getUnitPrices()) {
-						rateContainer.addAll(productVO.getUnitPrices());
-						productRateCB.select(rateContainer.firstItemId());
-					}
-					quantityCB.getContainerDataSource().removeAllItems();
-					quantityCB.setUnit(productVO.getProductUnit().getUnit());
+//					logger.info("price list {}", productVO.getUnitPrices());
+//					if (null != productVO.getUnitPrices()) {
+//						rateContainer.addAll(productVO.getUnitPrices());
+//						productRateCB.select(rateContainer.firstItemId());
+//					}
+//					quantityCB.getContainerDataSource().removeAllItems();
+//					quantityCB.setUnit(productVO.getProductUnit().getUnit());
 				}
 				updateAddToCartStatus();
 			}
@@ -1088,17 +1088,17 @@ public class BillingComponent extends CustomComponent {
 			@Override
 			public void addNewItem(String newRate) {
 				try {
-					Amount<Money> rate = Amount.valueOf(
-							Double.parseDouble(newRate.trim()), Rupee.INR);
-					productRateCB.addItem(rate);
-					productRateCB.setValue(rate);
+//					Amount<Money> rate = Amount.valueOf(
+//							Double.parseDouble(newRate.trim()), Rupee.INR);
+//					productRateCB.addItem(rate);
+//					productRateCB.setValue(rate);
 
-					((List<Amount<Money>>) productNameCBCTR
-							.getItem(productNameCB.getValue())
-							.getItemProperty("unitPrices").getValue())
-							.add(rate);
+//					((List<Amount<Money>>) productNameCBCTR
+//							.getItem(productNameCB.getValue())
+//							.getItemProperty("unitPrices").getValue())
+//							.add(rate);
 
-					quantityCB.focus();
+//					quantityCB.focus();
 				} catch (NumberFormatException e) {
 					Notification.show("Invalid Rate", newRate,
 							Type.TRAY_NOTIFICATION);
@@ -1117,16 +1117,16 @@ public class BillingComponent extends CustomComponent {
 			}
 		});
 
-		quantityCB.setEnabled(false);
-		quantityCB.addValueChangeListener(new ValueChangeListener() {
-
-			private static final long serialVersionUID = 2140623144360706800L;
-
-			@Override
-			public void valueChange(ValueChangeEvent event) {
-				updateAddToCartStatus();
-			}
-		});
+//		quantityCB.setEnabled(false);
+//		quantityCB.addValueChangeListener(new ValueChangeListener() {
+//
+//			private static final long serialVersionUID = 2140623144360706800L;
+//
+//			@Override
+//			public void valueChange(ValueChangeEvent event) {
+//				updateAddToCartStatus();
+//			}
+//		});
 
 		addToCartBT.setCaption(ADD_TO_CART);
 		addToCartBT.setWidth("100%");
@@ -1151,14 +1151,14 @@ public class BillingComponent extends CustomComponent {
 							.getProductDescription();
 					Amount<Money> unitPrice = ((Amount<Money>) productRateCB
 							.getValue());
-					Measure<Double, ? extends Quantity> quantity = (Measure<Double, ? extends Quantity>) quantityCB
-							.getValue();
-					BillItemVO<?, ?> bItem = BillItemVO.valueOf(serialNo,
-							productName, productUnit, productDescription,
-							unitPrice, quantity);
-					billableItemsTB.getContainerDataSource().addItem(bItem);
-					billableItemsTB.setCurrentPageFirstItemId(bItem);
-					updateBillingPayments(bItem.getAmount(), 1);
+//					Measure<Double, ? extends Quantity> quantity = (Measure<Double, ? extends Quantity>) quantityCB
+//							.getValue();
+//					BillItemVO<?, ?> bItem = BillItemVO.valueOf(serialNo,
+//							productName, productUnit, productDescription,
+//							unitPrice, quantity);
+//					billableItemsTB.getContainerDataSource().addItem(bItem);
+//					billableItemsTB.setCurrentPageFirstItemId(bItem);
+//					updateBillingPayments(bItem.getAmount(), 1);
 				} else {
 					BillItemVO<?, ?> billItemVO = (BillItemVO<?, ?>) billableItemsTB
 							.getValue();
@@ -1167,10 +1167,10 @@ public class BillingComponent extends CustomComponent {
 							.getValue());
 					selectedItem.getItemProperty(PID_UNIT_RATE).setValue(
 							productRateCB.getValue());
-					selectedItem.getItemProperty(PID_QUANTITY).setValue(
-							quantityCB.getValue());
-					selectedItem.getItemProperty(PID_AMOUNT).setValue(
-							BillItemVO.computeAmount(billItemVO));
+//					selectedItem.getItemProperty(PID_QUANTITY).setValue(
+//							quantityCB.getValue());
+//					selectedItem.getItemProperty(PID_AMOUNT).setValue(
+//							BillItemVO.computeAmount(billItemVO));
 					updateBillingPayments(billItemVO.getAmount(), 1);
 				}
 				resetAddToCart();
@@ -1180,55 +1180,55 @@ public class BillingComponent extends CustomComponent {
 
 		resetAddToCart();
 
-		addToCartLayout.setImmediate(false);
-		addToCartLayout.setWidth("100%");
-		addToCartLayout.setMargin(false);
-		addToCartLayout.setSpacing(true);
-
-		addToCartLayout.addComponent(productNameCB);
-		addToCartLayout.addComponent(productRateCB);
-		addToCartLayout.addComponent(quantityCB);
-		addToCartLayout.addComponent(addToCartBT);
-
-		addToCartLayout.setExpandRatio(productNameCB, 5);
-		addToCartLayout.setExpandRatio(productRateCB, 1.5f);
-		addToCartLayout.setExpandRatio(quantityCB, 1.5f);
-		addToCartLayout.setExpandRatio(addToCartBT, 1f);
-
+//		addToCartLayout.setImmediate(false);
+//		addToCartLayout.setWidth("100%");
+//		addToCartLayout.setMargin(false);
+//		addToCartLayout.setSpacing(true);
+//
+//		addToCartLayout.addComponent(productNameCB);
+//		addToCartLayout.addComponent(productRateCB);
+//		addToCartLayout.addComponent(quantityCB);
+//		addToCartLayout.addComponent(addToCartBT);
+//
+//		addToCartLayout.setExpandRatio(productNameCB, 5);
+//		addToCartLayout.setExpandRatio(productRateCB, 1.5f);
+//		addToCartLayout.setExpandRatio(quantityCB, 1.5f);
+//		addToCartLayout.setExpandRatio(addToCartBT, 1f);
+//
 		return addToCartLayout;
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void updateAddToCartStatus() {
-		if (null != productNameCB.getValue()) {
-			productRateCB.setEnabled(true);
-			if (null != productRateCB.getValue()) {
-				quantityCB.setEnabled(true);
-				if (null != quantityCB.getValue()) {
-					logger.info("Cart BT enabled");
-					addToCartBT.setEnabled(true);
-					addToCartBT.focus();
-				} else {
-					logger.info("Cart BT disabled");
-					addToCartBT.setEnabled(false);
-				}
-			} else {
-				quantityCB.setValue(null);
-				quantityCB.setEnabled(false);
-				logger.info("Cart BT disabled");
-				addToCartBT.setEnabled(false);
-			}
-		} else {
-			BeanItemContainer<Amount<Money>> rateContainer = (BeanItemContainer<Amount<Money>>) productRateCB
-					.getContainerDataSource();
-			rateContainer.removeAllItems();
-			productRateCB.setValue(null);
-			quantityCB.setValue(null);
-			productRateCB.setEnabled(false);
-			quantityCB.setEnabled(false);
-			logger.info("Cart BT disabled and rate,quantity reset");
-			addToCartBT.setEnabled(false);
-		}
+//		if (null != productNameCB.getValue()) {
+//			productRateCB.setEnabled(true);
+//			if (null != productRateCB.getValue()) {
+//				quantityCB.setEnabled(true);
+//				if (null != quantityCB.getValue()) {
+//					logger.info("Cart BT enabled");
+//					addToCartBT.setEnabled(true);
+//					addToCartBT.focus();
+//				} else {
+//					logger.info("Cart BT disabled");
+//					addToCartBT.setEnabled(false);
+//				}
+//			} else {
+//				quantityCB.setValue(null);
+//				quantityCB.setEnabled(false);
+//				logger.info("Cart BT disabled");
+//				addToCartBT.setEnabled(false);
+//			}
+//		} else {
+//			BeanItemContainer<Amount<Money>> rateContainer = (BeanItemContainer<Amount<Money>>) productRateCB
+//					.getContainerDataSource();
+//			rateContainer.removeAllItems();
+//			productRateCB.setValue(null);
+//			quantityCB.setValue(null);
+//			productRateCB.setEnabled(false);
+//			quantityCB.setEnabled(false);
+//			logger.info("Cart BT disabled and rate,quantity reset");
+//			addToCartBT.setEnabled(false);
+//		}
 	}
 
 	protected void displayModal(String prodName, Double quantity) {
@@ -1256,10 +1256,10 @@ public class BillingComponent extends CustomComponent {
 		final TextField productNameTF = new TextField();
 		HorizontalLayout hQuantity = new HorizontalLayout();
 		final TextField quantityTF = new TextField();
-		final ComboBox quantityUnitCB = new ComboBox(null,
-				UnitUtil.getValidUnitList());
+//		final ComboBox quantityUnitCB = new ComboBox(null,
+//				UnitUtil.getValidUnitList());
 		hQuantity.addComponent(quantityTF);
-		hQuantity.addComponent(quantityUnitCB);
+//		hQuantity.addComponent(quantityUnitCB);
 		vData.addComponent(productNameTF);
 		vData.addComponent(hQuantity);
 
@@ -1272,31 +1272,31 @@ public class BillingComponent extends CustomComponent {
 		quantityTF.setConverter(new StringToDoubleConverter());
 		quantityTF.setValue(String.valueOf(quantity));
 
-		quantityUnitCB.setInputPrompt("Unit");
-		quantityUnitCB.setFilteringMode(FilteringMode.CONTAINS);
-		quantityUnitCB.setNullSelectionAllowed(true);
-		quantityUnitCB.setWidth("100%");
-		quantityUnitCB.setImmediate(true);
-		quantityUnitCB.setNewItemsAllowed(true);
-		quantityUnitCB.setNewItemHandler(new NewItemHandler() {
+//		quantityUnitCB.setInputPrompt("Unit");
+//		quantityUnitCB.setFilteringMode(FilteringMode.CONTAINS);
+//		quantityUnitCB.setNullSelectionAllowed(true);
+//		quantityUnitCB.setWidth("100%");
+//		quantityUnitCB.setImmediate(true);
+//		quantityUnitCB.setNewItemsAllowed(true);
+//		quantityUnitCB.setNewItemHandler(new NewItemHandler() {
 
-			private static final long serialVersionUID = -4532254587935410919L;
-
-			@Override
-			public void addNewItem(String newItemCaption) {
-				String unit = UnitUtil.getValidUnit(newItemCaption);
-				if (null != unit) {
-					quantityUnitCB.setValue(unit);
-				}
-			}
-		});
+//			private static final long serialVersionUID = -4532254587935410919L;
+//
+//			@Override
+//			public void addNewItem(String newItemCaption) {
+//				String unit = UnitUtil.getValidUnit(newItemCaption);
+//				if (null != unit) {
+//					quantityUnitCB.setValue(unit);
+//				}
+//			}
+//		});
 
 		hQuantity.setImmediate(false);
 		hQuantity.setWidth("100%");
 		hQuantity.setMargin(false);
 		hQuantity.setSpacing(true);
 		hQuantity.setExpandRatio(quantityTF, 1.0f);
-		hQuantity.setExpandRatio(quantityUnitCB, 2.0f);
+//		hQuantity.setExpandRatio(quantityUnitCB, 2.0f);
 
 		vData.setImmediate(false);
 		vData.setWidth("100%");
@@ -1361,24 +1361,24 @@ public class BillingComponent extends CustomComponent {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Object parent;
-				if ((parent = event.getComponent().getParent().getParent()) instanceof Window) {
-					if (null != productNameTF.getValue()
-							&& !productNameTF.getValue().trim().isEmpty()
-							&& null != quantityTF.getValue()
-							&& !quantityTF.getValue().trim().isEmpty()
-							&& null != quantityUnitCB.getValue()
-							&& !((String) quantityUnitCB.getValue()).trim()
-									.isEmpty()) {
-						((Window) parent).close();
-						productNameCB.getNewItemHandler().addNewItem(
-								productNameTF.getValue()
-										+ quantityTF.getValue()
-										+ quantityUnitCB.getValue());
-					} else {
-						// TODO display error msg to update every field
-					}
-				}
+//				Object parent;
+//				if ((parent = event.getComponent().getParent().getParent()) instanceof Window) {
+//					if (null != productNameTF.getValue()
+//							&& !productNameTF.getValue().trim().isEmpty()
+//							&& null != quantityTF.getValue()
+//							&& !quantityTF.getValue().trim().isEmpty()
+//							&& null != quantityUnitCB.getValue()
+//							&& !((String) quantityUnitCB.getValue()).trim()
+//									.isEmpty()) {
+//						((Window) parent).close();
+//						productNameCB.getNewItemHandler().addNewItem(
+//								productNameTF.getValue()
+//										+ quantityTF.getValue()
+//										+ quantityUnitCB.getValue());
+//					} else {
+//						// TODO display error msg to update every field
+//					}
+//				}
 			}
 		});
 
@@ -1396,11 +1396,11 @@ public class BillingComponent extends CustomComponent {
 		// productNameCB.unselect(productNameCB.getValue());
 		productNameCB.setValue(null);
 		productRateCB.setValue(null);
-		quantityCB.setValue(null);
+//		quantityCB.setValue(null);
 
 		productNameCB.setEnabled(true);
 		productRateCB.setEnabled(false);
-		quantityCB.setEnabled(false);
+//		quantityCB.setEnabled(false);
 		addToCartBT.setEnabled(false);
 		addToCartBT.setCaption(ADD_TO_CART);
 		productNameCB.focus();

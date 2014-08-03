@@ -7043,3 +7043,12 @@ body .retaletheme.v-app .v-app-loading {
 .retaletheme .v-textfield-align-right {
 	text-align: right;
 }
+
+.retaletheme .r-table-border-less .v-table-body, .retaletheme .r-table-border-less .v-table-cell-content {
+	border: 0px;
+	padding: 0px;
+}
+
+.retaletheme .r-table-border-less .v-table-cell-wrapper > input.v-textfield {
+	margin-top: 0px;
+}

@@ -9,32 +9,36 @@ import javax.measure.unit.SystemOfUnits;
 import javax.measure.unit.Unit;
 import javax.measure.unit.UnitFormat;
 
-public final class RetaSI extends SystemOfUnits {
+import org.jscience.economics.money.Currency;
 
-	private static HashSet<Unit<?>> UNITS = new HashSet<Unit<?>>();
+public final class BillingUnits extends SystemOfUnits {
 
-	private RetaSI() {
+	private static HashSet<Unit<?>> UNITS = new HashSet<Unit<?>>(4);
+	public static final Currency INR;
+
+	private BillingUnits() {
 	}
 
-	public static RetaSI getInstance() {
+	public static BillingUnits getInstance() {
 		return INSTANCE;
 	}
 
-	private static final RetaSI INSTANCE = new RetaSI();
+	private static final BillingUnits INSTANCE = new BillingUnits();
 
 	public static final Unit<Dimensionless> PIECE = retaSI(Unit.ONE);
 
 	// TODO
 	// need to check the need for pkt
 	// if needed what is the right implementation
-	// current implementation is ambiguous as 1dz to 1pkt considered as 1pcs
+	// current implementation is ambiguous as 1-dz to 1-pkt considered as 1pcs
 	// public static final Unit<Dimensionless> PACKET = PIECE.alternate("pkt");
 
 	public static final Unit<Dimensionless> DOZEN = retaSI(PIECE.times(12));
 
 	static {
-		UnitFormat.getInstance().label(RetaSI.PIECE, "pcs");
-		UnitFormat.getInstance().label(RetaSI.DOZEN, "dz");
+		UnitFormat.getInstance().label(BillingUnits.PIECE, "pcs");
+		UnitFormat.getInstance().label(BillingUnits.DOZEN, "dz");
+		INR = new Currency("INR");
 	}
 
 	@Override
@@ -42,13 +46,6 @@ public final class RetaSI extends SystemOfUnits {
 		return Collections.unmodifiableSet(UNITS);
 	}
 
-	/**
-	 * Adds a new unit to the collection.
-	 * 
-	 * @param unit
-	 *            the unit being added.
-	 * @return <code>unit</code>.
-	 */
 	private static <U extends Unit<?>> U retaSI(U unit) {
 		UNITS.add(unit);
 		return unit;

@@ -3,9 +3,9 @@ package in.retalemine.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegExUtil {
+public class BillingRegExUtil {
 
-	private RegExUtil() {
+	private BillingRegExUtil() {
 	}
 
 	public static String getCamelCaseString(String input) {
@@ -31,12 +31,12 @@ public class RegExUtil {
 		if (productNameUnitMatcher.find()) {
 			result = new String[3];
 			productName = new StringBuffer();
-			result[0] = productNameUnitMatcher.group(1);
-			result[1] = productNameUnitMatcher.group(2);
+			result[1] = productNameUnitMatcher.group(1);
+			result[2] = productNameUnitMatcher.group(2);
 			productNameUnitMatcher.appendReplacement(productName, "");
-			result[2] = productName.toString();
-			result[2] = result[2].endsWith(" - ") ? result[2].substring(0,
-					result[2].length() - 3) : result[2].trim();
+			result[0] = productName.toString();
+			result[0] = result[0].endsWith(" - ") ? result[0].substring(0,
+					result[0].length() - 3) : result[0].trim();
 		}
 		return result;
 	}

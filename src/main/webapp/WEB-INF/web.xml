@@ -10,16 +10,16 @@
 		<param-value>true</param-value>
 	</context-param>
 	<servlet>
-		<servlet-name>appUI</servlet-name>
+		<servlet-name>BillingUI</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
 			<description>Vaadin UI</description>
 			<param-name>UI</param-name>
-			<param-value>in.retalemine.view.AppUI</param-value>
+			<param-value>in.retalemine.view.UI.BillingUI</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>appUI</servlet-name>
+		<servlet-name>BillingUI</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 </web-app>

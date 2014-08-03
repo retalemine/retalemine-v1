@@ -13,7 +13,7 @@
 		<slf4j.version>1.7.6</slf4j.version>
 		<log4j.version>2.0-rc1</log4j.version>
 		<vaadin.version>7.1.12</vaadin.version>
-		<blackboard-addon.version>2.2.0</blackboard-addon.version>
+		<guava.version>17.0</guava.version>
 		<jscience.version>4.3.1</jscience.version>
 		<jetty.plugin.version>9.0.7.v20131107</jetty.plugin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
@@ -66,11 +66,11 @@
 			<artifactId>vaadin-themes</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
-		<!-- UI: vaadin add-on -->
+		<!-- Google Core lib for java: Event Bus -->
 		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>blackboard</artifactId>
-			<version>${blackboard-addon.version}</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 		<!-- util: jscience -->
 		<dependency>
