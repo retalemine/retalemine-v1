@@ -6,6 +6,10 @@ import in.retalemine.view.constants.BillingConstants;
 import in.retalemine.view.event.BillItemSelectionEvent;
 import in.retalemine.view.event.CartSelectionEvent;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import javax.measure.Measure;
 import javax.measure.quantity.Quantity;
 
@@ -132,6 +136,14 @@ public class BillingTable extends Table {
 			}
 		});
 
+	}
+
+	@Override
+	public Collection<?> getSortableContainerPropertyIds() {
+		LinkedList<Object> sortables = new LinkedList<Object>();
+		sortables.addAll(Arrays.asList(BillingConstants.PID_PRODUCT_NAME,
+				BillingConstants.PID_UNIT_RATE, BillingConstants.PID_AMOUNT));
+		return sortables;
 	}
 
 	private Object getItemValue(Object itemId, String pId) {
