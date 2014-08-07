@@ -34,6 +34,7 @@ public class BillingTable extends Table {
 			.getLogger(BillingTable.class);
 	private BeanItemContainer<BillItemVO<? extends Quantity, ? extends Quantity>> container = new BeanItemContainer<BillItemVO<? extends Quantity, ? extends Quantity>>(
 			BillItemVO.class);
+	private BillingItemSetChangeListener billingItemSetChangeListener = new BillingItemSetChangeListener();
 
 	public BillingTable(final EventBus eventBus) {
 
@@ -69,6 +70,8 @@ public class BillingTable extends Table {
 		setMultiSelect(false);
 		setImmediate(true);
 
+		addItemSetChangeListener(billingItemSetChangeListener);
+
 		addValueChangeListener(new Property.ValueChangeListener() {
 
 			private static final long serialVersionUID = -1033825452638233522L;
@@ -89,22 +92,6 @@ public class BillingTable extends Table {
 					logger.info("{} posts BillItemSelectionEvent", getClass()
 							.getSimpleName());
 					eventBus.post(new BillItemSelectionEvent(null));
-				}
-			}
-		});
-
-		addItemSetChangeListener(new Container.ItemSetChangeListener() {
-
-			private static final long serialVersionUID = -8974969742374909756L;
-
-			@Override
-			public void containerItemSetChange(
-					Container.ItemSetChangeEvent event) {
-				logger.info("{} ItemSetChange", getClass().getSimpleName());
-				if (event.getContainer().size() > 0) {
-					// enable billMeBT, resetBT
-				} else {
-					// disable billMeBT, resetBT
 				}
 			}
 		});
@@ -191,6 +178,7 @@ public class BillingTable extends Table {
 		if (event.getIsNew()) {
 			if (container.containsId(event.getBillItemVO())) {
 				updateItem(event.getBillItemVO(), event.getBillItemVO(), false);
+				fireItemSetChange();
 			} else {
 				container.addItem(event.getBillItemVO());
 			}
@@ -198,17 +186,38 @@ public class BillingTable extends Table {
 			if (event.getBillItemVO().equals(getValue())) {
 				// UnitRate not modified
 				updateItem(getValue(), event.getBillItemVO(), true);
+				fireItemSetChange();
 			} else {
 				// UnitRate modified
-				container.removeItem(getValue());
 				if (container.containsId(event.getBillItemVO())) {
 					updateItem(event.getBillItemVO(), event.getBillItemVO(),
 							false);
 				} else {
+					removeItemSetChangeListener(billingItemSetChangeListener);
 					container.addItem(event.getBillItemVO());
 				}
+				addItemSetChangeListener(billingItemSetChangeListener);
+				container.removeItem(getValue());
 			}
+			unselect(event.getBillItemVO());
 		}
 	}
 
+	class BillingItemSetChangeListener implements
+			Container.ItemSetChangeListener {
+
+		private static final long serialVersionUID = -1198647547860677568L;
+
+		@Override
+		public void containerItemSetChange(Container.ItemSetChangeEvent event) {
+			logger.info("{} containerItemSetChange", getClass().getSimpleName());
+			if (event.getContainer().size() > 0) {
+				// update billing footer, enable billMeBT & resetBT
+			} else {
+				// reset billing footer, disable billMeBT & resetBT
+			}
+
+		}
+
+	}
 }
