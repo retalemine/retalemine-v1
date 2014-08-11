@@ -3,6 +3,7 @@ package in.retalemine.view.component;
 import in.retalemine.util.BillingComputationUtil;
 import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.constants.BillingConstants;
+import in.retalemine.view.event.BillItemChangeEvent;
 import in.retalemine.view.event.BillItemSelectionEvent;
 import in.retalemine.view.event.CartSelectionEvent;
 
@@ -34,12 +35,11 @@ public class BillingTable extends Table {
 			.getLogger(BillingTable.class);
 	private BeanItemContainer<BillItemVO<? extends Quantity, ? extends Quantity>> container = new BeanItemContainer<BillItemVO<? extends Quantity, ? extends Quantity>>(
 			BillItemVO.class);
-	private BillingItemSetChangeListener billingItemSetChangeListener = new BillingItemSetChangeListener();
+	private BillingItemSetChangeListener billingItemSetChangeListener;
 
 	public BillingTable(final EventBus eventBus) {
 
 		logger.info("Initializing {}", getClass().getSimpleName());
-
 		addContainerProperty(BillingConstants.PID_PRODUCT_NAME, String.class,
 				"", BillingConstants.PRODUCT_NAME, null, null);
 		addContainerProperty(BillingConstants.PID_PRODUCT_UNIT, Measure.class,
@@ -70,6 +70,8 @@ public class BillingTable extends Table {
 		setMultiSelect(false);
 		setImmediate(true);
 
+		billingItemSetChangeListener = new BillingItemSetChangeListener(
+				eventBus);
 		addItemSetChangeListener(billingItemSetChangeListener);
 
 		addValueChangeListener(new Property.ValueChangeListener() {
@@ -207,17 +209,28 @@ public class BillingTable extends Table {
 			Container.ItemSetChangeListener {
 
 		private static final long serialVersionUID = -1198647547860677568L;
+		private final EventBus eventBus;
+
+		public BillingItemSetChangeListener(EventBus eventBus) {
+			this.eventBus = eventBus;
+		}
 
 		@Override
 		public void containerItemSetChange(Container.ItemSetChangeEvent event) {
 			logger.info("{} containerItemSetChange", getClass().getSimpleName());
 			if (event.getContainer().size() > 0) {
 				// update billing footer, enable billMeBT & resetBT
+				logger.info("{} posts BillItemChangeEvent", getClass()
+						.getSimpleName());
+				eventBus.post(new BillItemChangeEvent(BillingComputationUtil
+						.computeSubAmount(container.getItemIds())));
 			} else {
+				logger.info("{} posts BillItemChangeEvent", getClass()
+						.getSimpleName());
+				eventBus.post(new BillItemChangeEvent(null));
 				// reset billing footer, disable billMeBT & resetBT
 			}
 
 		}
-
 	}
 }
