@@ -15,6 +15,7 @@ Core Billing Solution
      * RateSelectionEvent
      * CartSelectionEvent
      * BillItemSelectionEvent
+     * ResetBillingEvent
    * Post:
      * ProductSelectionEvent
        * Product [Name,Unit]
@@ -26,7 +27,8 @@ Core Billing Solution
    * Listens:
      * ProductSelectionEvent
      * CartSelectionEvent
-     * BillItemSelectionEvent     
+     * BillItemSelectionEvent
+     * ResetBillingEvent
    * Post:
      * RateSelectionEvent
        * Rate [new]
@@ -41,7 +43,8 @@ Core Billing Solution
      * ProductSelectionEvent
      * RateSelectionEvent
      * CartSelectionEvent
-     * BillItemSelectionEvent     
+     * BillItemSelectionEvent
+     * ResetBillingEvent
    * Post:
      * QuantitySelectionEvent
        * NetQuantity
@@ -53,7 +56,8 @@ Core Billing Solution
      * ProductSelectionEvent
      * RateSelectionEvent
      * QuantitySelectionEvent
-     * BillItemSelectionEvent     
+     * BillItemSelectionEvent
+     * ResetBillingEvent
    * Post:
      * CartSelectionEvent
        * Add -> add					[produntDesc,unitRate] - new
@@ -66,7 +70,8 @@ Core Billing Solution
    * Holds billItems
    * Error handling
    * Listens:
-     * CartSelectionEvent     
+     * CartSelectionEvent
+     * ResetBillingEvent
    * Post:
      * BillItemSelectionEvent
        * BillItem [selected]
@@ -84,3 +89,34 @@ Core Billing Solution
    * Allows to define tax for the bill
    * Post:
      * TaxSelectionEvent
+
+ * DeliveryOption
+   * Allows to define Home Delivery option
+   * Post:
+     * DeliveryModeSelectionEvent
+   * Listens:
+     * ResetBillingEvent
+
+ * CustomerForm
+   * Collects customer details
+   * Listens:
+     * PaymentModeSelectionEvent
+     * DeliveryModeSelectionEvent
+     * ResetBillingEvent
+
+ * PaymentOptions
+   * Allows to define the payment mode
+   * Post:
+     * PaymentModeSelectionEvent
+   * Listens:
+     * ResetBillingEvent 
+
+ * BillProcessing
+   * Finalize bill submission and printing
+   * Post:
+     * ResetBillingEvent
+   * Listens:
+     * BillItemChangeEvent
+     * TaxSelectionEvent
+     * PaymentModeSelectionEvent
+     * DeliveryModeSelectionEvent
