@@ -36,11 +36,11 @@ public class CustomerForm extends FormLayout {
 
 		customerInfo = new PropertysetItem();
 		customerInfo.addItemProperty(BillingConstants.CUSTOMER_NAME,
-				new ObjectProperty<String>("name"));
+				new ObjectProperty<String>(""));
 		customerInfo.addItemProperty(BillingConstants.CUSTOMER_CONTACT_NO,
-				new ObjectProperty<String>("123"));
+				new ObjectProperty<String>(""));
 		customerInfo.addItemProperty(BillingConstants.CUSTOMER_ADDRESS,
-				new ObjectProperty<String>("address"));
+				new ObjectProperty<String>(""));
 
 		customerName = new TextField(BillingConstants.CUSTOMER_NAME);
 		contactNumber = new TextField(BillingConstants.CUSTOMER_CONTACT_NO);

@@ -257,9 +257,10 @@ public class BillProcessing extends HorizontalLayout {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				billVO.setBillDate(new Date());
+				Date todaysDate = new Date();
+				billVO.setBillDate(todaysDate);
 				billVO.setIsPaid(true);
-				billVO.setPaidDate(new Date());
+				billVO.setPaidDate(todaysDate);
 				// TODO save the bill and print it
 				// TODO keep the modal with progress bar depicting save and
 				// print
