@@ -1,4 +1,4 @@
-package in.retalemine.view.VO;
+package in.retalemine.entity;
 
 public enum PaymentMode {
 	CASH("Cash"), CHEQUE("Cheque");

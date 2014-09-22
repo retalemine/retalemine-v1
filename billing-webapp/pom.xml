@@ -6,24 +6,16 @@
 		<artifactId>billing-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>in.retalemine</groupId>
 	<artifactId>billing-webapp</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Billing Solutions - WebApp</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/retalemine/retalemine-v1</url>
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<junit.version>3.8.1</junit.version>
-		<slf4j.version>1.7.6</slf4j.version>
-		<log4j.version>2.0-rc1</log4j.version>
 		<vaadin.version>7.1.12</vaadin.version>
 		<guava.version>17.0</guava.version>
-		<jscience.version>4.3.1</jscience.version>
 		<jetty.plugin.version>9.0.7.v20131107</jetty.plugin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<lifecycle-mapping.plugin.version>1.0.0</lifecycle-mapping.plugin.version>
-		<maven-compiler.plugin.version>3.1</maven-compiler.plugin.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -34,9 +26,9 @@
 	<dependencies>
 		<!-- testing -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- logger -->
@@ -175,15 +167,6 @@
 								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler.plugin.version}</version>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
 					</configuration>
 				</plugin>
 			</plugins>

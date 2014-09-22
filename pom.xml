@@ -6,13 +6,30 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Billing Solutions - Parent</name>
+	<url>https://github.com/retalemine/retalemine-v1</url>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:retalemine/retalemine-v1.git</connection>
+		<developerConnection>scm:git:git@github.com:retalemine/retalemine-v1.git</developerConnection>
+		<url>git@retalemine/retalemine-v1.git</url>
+	</scm>
 	<modules>
-<!-- 		<module>billing-model</module> -->
+		<module>billing-persist</module>
 		<module>billing-webapp</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-compiler.plugin.version>3.1</maven-compiler.plugin.version>
+		<testng.version>6.8.8</testng.version>
+		<slf4j.version>1.7.6</slf4j.version>
+		<log4j.version>2.0-rc1</log4j.version>
+		<jscience.version>4.3.1</jscience.version>
 	</properties>
 	<build>
 		<pluginManagement>

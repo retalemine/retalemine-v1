@@ -1,7 +1,6 @@
-retalemine-v1
-=============
-
-Core Billing Solution
+Billing Webapp Module:
+======================
+* Uses VAADIN for UI
 
 ####Components:
  * ProductComboBox

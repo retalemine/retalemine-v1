@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<mongo:db-factory id="mongoDbFactory" dbname="retalemine" />
+
+	<mongo:mapping-converter base-package="in.retalemine.converters">
+		<mongo:custom-converters>
+			<mongo:converter>
+				<bean class="in.retalemine.converters.PaymentWriteConverter" />
+			</mongo:converter>
+			<mongo:converter>
+				<bean class="in.retalemine.converters.PaymentReadConverter" />
+			</mongo:converter>
+			<mongo:converter>
+				<bean class="in.retalemine.converters.AmountWriteConverter" />
+			</mongo:converter>
+			<mongo:converter>
+				<bean class="in.retalemine.converters.AmountReadConverter" />
+			</mongo:converter>
+			<mongo:converter>
+				<bean class="in.retalemine.converters.MeasureWriteConverter" />
+			</mongo:converter>
+			<mongo:converter>
+				<bean class="in.retalemine.converters.MeasureReadConverter" />
+			</mongo:converter>
+		</mongo:custom-converters>
+	</mongo:mapping-converter>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+		<constructor-arg name="mongoConverter" ref="mappingConverter" />
+	</bean>
+	
+<!-- 	<context:annotation-config/> -->
+<!-- 	<context:component-scan base-package="in.retalemine.repository" /> -->
+	<mongo:repositories base-package="in.retalemine.repository" />
+	
+</beans>
