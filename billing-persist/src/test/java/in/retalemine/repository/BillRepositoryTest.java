@@ -69,9 +69,15 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 
 		Bill bill = new Bill(1, new Date(), bItems, subTotal,
 				Arrays.asList(tax), totalAmount, payment, customer, false);
-
 		billrepository.save(bill);
+
 		Bill fetchBill = billrepository.findOne(1);
 		mongoConverter.convertToMongoType(fetchBill);
+
+		bill = new Bill(2, new Date(), bItems, subTotal, Arrays.asList(tax),
+				totalAmount, payment, customer, false);
+		billrepository.insert(bill);
+
 	}
+
 }
