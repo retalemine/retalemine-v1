@@ -15,4 +15,7 @@ hs_err_pid*
 */src/main/webapp/VAADIN/themes/*/styles.css
 */src/main/webapp/VAADIN/gwt-unitCache/
 */src/main/webapp/VAADIN/widgetsets/
+
 target
+test-output
+

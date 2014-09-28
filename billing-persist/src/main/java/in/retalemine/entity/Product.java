@@ -10,6 +10,7 @@ import javax.measure.quantity.Quantity;
 
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -17,6 +18,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "products")
 public class Product<Q extends Quantity> {
 
+	@Id
+	private String objectId;
 	@Field(MongoDBKeys.PRODUCT_NAME)
 	private String productName;
 	@Field(MongoDBKeys.PRODUCT_UNIT)
@@ -33,12 +36,17 @@ public class Product<Q extends Quantity> {
 	}
 
 	public Product(String productName, Measure<Double, Q> productUnit,
-			String productDescription, Set<Amount<Money>> unitPrices,
-			Date createdOrModifiedDate) {
+			Set<Amount<Money>> unitPrices, Date createdOrModifiedDate) {
 		this.productName = productName;
 		this.productUnit = productUnit;
-		this.productDescription = productDescription;
+		this.productDescription = productName
+				+ MongoDBKeys.PRODUCT_DESC_DIVIDER + productUnit;
 		this.unitPrices = unitPrices;
 		this.createdOrModifiedDate = createdOrModifiedDate;
 	}
+
+	public String getProductDescription() {
+		return productDescription + productName + " - " + productUnit;
+	}
+
 }

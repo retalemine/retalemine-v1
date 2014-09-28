@@ -2,12 +2,16 @@ package in.retalemine.repository;
 
 import in.retalemine.entity.Product;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends MongoRepository<Product<?>, String> {
+public interface ProductRepository extends MongoRepository<Product<?>, String>,
+		ProductBaseRepository<Product<?>, String> {
 
-	public Product<?> findByProductName(String productName);
+	List<Product<?>> findByProductNameIgnoreCase(Pageable pageable);
 
 }
