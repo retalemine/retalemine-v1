@@ -1,7 +1,7 @@
 package in.retalemine.view.component;
 
-import in.retalemine.util.BillingComputationUtil;
-import in.retalemine.util.BillingRegExUtil;
+import in.retalemine.util.ComputationUtil;
+import in.retalemine.util.InputParser;
 import in.retalemine.view.constants.BillingConstants;
 import in.retalemine.view.event.BillItemSelectionEvent;
 import in.retalemine.view.event.CartSelectionEvent;
@@ -80,12 +80,11 @@ public class QuantityComboBox extends ComboBox {
 						quantityModalWindow(1);
 					}
 				} catch (NumberFormatException e) {
-					quantitySplit = BillingRegExUtil
-							.resolveQuantity(newQuantity);
+					quantitySplit = InputParser.resolveQuantity(newQuantity);
 					if (null != quantitySplit) {
 						String validUnit = null;
 						parsedQuantity = Double.parseDouble(quantitySplit[0]);
-						if (null != (validUnit = BillingComputationUtil
+						if (null != (validUnit = ComputationUtil
 								.getValidUnit(quantitySplit[1]))
 								&& parsedQuantity > 0) {
 							newUnit = javax.measure.unit.Unit
@@ -145,8 +144,8 @@ public class QuantityComboBox extends ComboBox {
 		FormLayout mailLayout = new FormLayout();
 		final QuantityComponent qty = new QuantityComponent(
 				BillingConstants.BOX_LABEL_UNIT_QUANTITY,
-				String.valueOf(quantity),
-				BillingComputationUtil.getValidUnits(unit.toString()));
+				String.valueOf(quantity), ComputationUtil.getValidUnits(unit
+						.toString()));
 		Button submit = new Button(BillingConstants.BOX_LABEL_SUBMIT);
 
 		submit.setImmediate(true);
@@ -245,7 +244,7 @@ public class QuantityComboBox extends ComboBox {
 			resetQuantityComboBox();
 		}
 	}
-	
+
 	@Subscribe
 	public void listenResetBillingEvent(final ResetBillingEvent event) {
 		logger.info("Event - {} : handler - {}", event.getClass()

@@ -5,6 +5,17 @@
  
 ####Maven archetype
 ===================
+* Maven quickstart archetype
+```
+mvn archetype:generate \
+   -DarchetypeArtifactId=maven-archetype-quickstart \
+   -DarchetypeVersion=LATEST \
+   -DgroupId=in.retalemine \
+   -DartifactId=billing-common \
+   -Dversion=1.0 \
+   -DinteractiveMode=false
+```
+   
 * Maven Webapp archetype
 
 ```

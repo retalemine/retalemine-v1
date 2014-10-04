@@ -1,6 +1,6 @@
 package in.retalemine.view.converter;
 
-import in.retalemine.util.BillingUnits;
+import in.retalemine.unit.BillingUnits;
 
 import java.util.Locale;
 

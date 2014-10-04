@@ -1,6 +1,6 @@
 package in.retalemine.view.VO;
 
-import in.retalemine.util.BillingComputationUtil;
+import in.retalemine.util.ComputationUtil;
 
 import java.util.Set;
 
@@ -23,8 +23,8 @@ public class BillItemVO<U extends Quantity, V extends Quantity> extends
 		super(productName, productUnit, unitRates);
 		this.unitRate = unitRate;
 		this.netQuantity = netQuantity;
-		this.amount = BillingComputationUtil.computeAmount(productUnit,
-				unitRate, netQuantity);
+		this.amount = ComputationUtil.computeAmount(productUnit, unitRate,
+				netQuantity);
 
 	}
 

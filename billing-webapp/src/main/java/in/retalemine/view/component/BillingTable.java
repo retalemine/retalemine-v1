@@ -1,6 +1,6 @@
 package in.retalemine.view.component;
 
-import in.retalemine.util.BillingComputationUtil;
+import in.retalemine.util.ComputationUtil;
 import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.constants.BillingConstants;
 import in.retalemine.view.event.BillItemChangeEvent;
@@ -156,20 +156,18 @@ public class BillingTable extends Table {
 			setItemValue(
 					itemId,
 					BillingConstants.PID_AMOUNT,
-					BillingComputationUtil.computeAmount(
-							eventItem.getProductUnit(),
+					ComputationUtil.computeAmount(eventItem.getProductUnit(),
 							eventItem.getUnitRate(), eventItem.getNetQuantity()));
 		} else {
 			Measure<Double, ? extends Quantity> oldNetQuantity = (Measure<Double, ? extends Quantity>) getItemValue(
 					itemId, BillingConstants.PID_NET_QUANTITY);
-			Measure<Double, ? extends Quantity> finalNetQuantity = BillingComputationUtil
+			Measure<Double, ? extends Quantity> finalNetQuantity = ComputationUtil
 					.computeNetQuantity(eventItem.getProductUnit(),
 							oldNetQuantity, eventItem.getNetQuantity());
 			setItemValue(itemId, BillingConstants.PID_NET_QUANTITY,
 					finalNetQuantity);
 			setItemValue(itemId, BillingConstants.PID_AMOUNT,
-					BillingComputationUtil.computeAmount(
-							eventItem.getProductUnit(),
+					ComputationUtil.computeAmount(eventItem.getProductUnit(),
 							eventItem.getUnitRate(), finalNetQuantity));
 		}
 	}
@@ -205,7 +203,7 @@ public class BillingTable extends Table {
 			unselect(event.getBillItemVO());
 		}
 	}
-	
+
 	@Subscribe
 	public void listenResetBillingEvent(final ResetBillingEvent event) {
 		logger.info("Event - {} : handler - {}", event.getClass()

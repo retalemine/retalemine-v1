@@ -1,6 +1,5 @@
 package in.retalemine.view.event;
 
-
 public class PaymentModeSelectionEvent {
 
 	private final String paymentMode;

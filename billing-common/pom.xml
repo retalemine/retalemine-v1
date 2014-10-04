@@ -6,26 +6,16 @@
 		<artifactId>billing-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>billing-persist</artifactId>
+	<artifactId>billing-common</artifactId>
 	<packaging>jar</packaging>
-	<name>Billing Solutions - Persist</name>
+	<name>Billing Solutions - Common</name>
 	<url>https://github.com/retalemine/retalemine-v1</url>
-	<properties>
-		<spring-framework.version>3.2.2.RELEASE</spring-framework.version>
-		<spring-mongodb.version>1.3.3.RELEASE</spring-mongodb.version>
-	</properties>
 	<dependencies>
 		<!-- testing -->
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>${testng.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring-framework.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- logger -->
@@ -44,27 +34,11 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring-framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
-			<version>${spring-mongodb.version}</version>
-		</dependency>
 		<!-- util: jscience -->
 		<dependency>
 			<groupId>org.jscience</groupId>
 			<artifactId>jscience</artifactId>
 			<version>${jscience.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>in.retalemine</groupId>
-			<artifactId>billing-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

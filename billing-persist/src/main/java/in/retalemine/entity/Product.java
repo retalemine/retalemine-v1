@@ -1,6 +1,6 @@
 package in.retalemine.entity;
 
-import in.retalemine.constants.ModelConstants;
+import in.retalemine.constants.BillingConstants;
 import in.retalemine.constants.MongoDBKeys;
 
 import java.util.Date;
@@ -41,7 +41,7 @@ public class Product<Q extends Quantity> {
 		this.productName = productName;
 		this.productUnit = productUnit;
 		this.productDescription = productName
-				+ ModelConstants.PRODUCT_DESC_DIVIDER + productUnit;
+				+ BillingConstants.PRODUCT_DESC_DIVIDER + productUnit;
 		this.unitPrices = unitPrices;
 		this.createdOrModifiedDate = createdOrModifiedDate;
 	}

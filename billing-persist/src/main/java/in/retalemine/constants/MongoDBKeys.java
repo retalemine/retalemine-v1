@@ -27,5 +27,4 @@ public interface MongoDBKeys {
 	public static final String CUSTOMER_ADDRESS = "address";
 	public static final String TAX_TYPE = "type";
 	public static final String TAX_PERCENTAGE = "pct";
-
 }

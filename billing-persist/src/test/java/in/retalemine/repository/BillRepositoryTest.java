@@ -89,7 +89,7 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 	@Test(enabled = true)
 	public void test_findAll() {
 	}
-	
+
 	@Test(enabled = true, expectedExceptions = DuplicateKeyException.class)
 	public void test_insertDuplicate() {
 		Bill fetchBill = billrepository.findOne(new Query(), Bill.class);

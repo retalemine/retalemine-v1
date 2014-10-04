@@ -75,6 +75,11 @@
 			<artifactId>jscience</artifactId>
 			<version>${jscience.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>in.retalemine</groupId>
+			<artifactId>billing-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>retalemine-v1</finalName>

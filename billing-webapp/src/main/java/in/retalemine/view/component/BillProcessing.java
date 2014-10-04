@@ -1,7 +1,7 @@
 package in.retalemine.view.component;
 
+import in.retalemine.unit.BillingUnits;
 import in.retalemine.util.BillingComputationUtil;
-import in.retalemine.util.BillingUnits;
 import in.retalemine.view.VO.BillVO;
 import in.retalemine.view.VO.PaymentMode;
 import in.retalemine.view.VO.TaxVO;

@@ -1,7 +1,7 @@
 package in.retalemine.view.component;
 
-import in.retalemine.util.BillingComputationUtil;
-import in.retalemine.util.BillingRegExUtil;
+import in.retalemine.util.ComputationUtil;
+import in.retalemine.util.InputParser;
 import in.retalemine.view.VO.ProductVO;
 import in.retalemine.view.constants.BillingConstants;
 import in.retalemine.view.event.BillItemSelectionEvent;
@@ -61,13 +61,13 @@ public class ProductComboBox extends ComboBox {
 			@Override
 			public void addNewItem(String newProductName) {
 				logger.info("{} addNewItem starts", getClass().getSimpleName());
-				String camelCasePName = BillingRegExUtil
+				String camelCasePName = InputParser
 						.getCamelCaseString(newProductName);
-				String[] result = BillingRegExUtil
+				String[] result = InputParser
 						.resolveProductUnit(camelCasePName);
 				if (null != result) {
 					String validUnit = null;
-					if (null != (validUnit = BillingComputationUtil
+					if (null != (validUnit = ComputationUtil
 							.getValidUnit(result[2]))) {
 						result[2] = validUnit;
 						Measure<Double, ? extends Quantity> productUnit = Measure
@@ -120,7 +120,7 @@ public class ProductComboBox extends ComboBox {
 				BillingConstants.BOX_LABEL_PRODUCT_NAME);
 		final QuantityComponent qty = new QuantityComponent(
 				BillingConstants.BOX_LABEL_UNIT_QUANTITY, quantity,
-				BillingComputationUtil.getValidUnits());
+				ComputationUtil.getValidUnits());
 		Button submit = new Button(BillingConstants.BOX_LABEL_SUBMIT);
 
 		pName.setInputPrompt(BillingConstants.BOX_PROMPT_PRODUCT_NAME);
@@ -221,7 +221,7 @@ public class ProductComboBox extends ComboBox {
 			resetProductComboBox();
 		}
 	}
-	
+
 	@Subscribe
 	public void listenResetBillingEvent(final ResetBillingEvent event) {
 		logger.info("Event - {} : handler - {}", event.getClass()

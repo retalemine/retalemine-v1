@@ -1,4 +1,4 @@
-package in.retalemine.util;
+package in.retalemine.unit;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,8 +13,7 @@ import org.jscience.economics.money.Currency;
 
 public final class BillingUnits extends SystemOfUnits {
 
-	private static HashSet<Unit<?>> UNITS = new HashSet<Unit<?>>(4);
-	public static final Currency INR;
+	private static final BillingUnits INSTANCE = new BillingUnits();
 
 	private BillingUnits() {
 	}
@@ -23,9 +22,22 @@ public final class BillingUnits extends SystemOfUnits {
 		return INSTANCE;
 	}
 
-	private static final BillingUnits INSTANCE = new BillingUnits();
+	public static final Currency INR;
 
-	public static final Unit<Dimensionless> PIECE = retaSI(Unit.ONE);
+	private static HashSet<Unit<?>> UNITS = new HashSet<Unit<?>>(3);
+
+	public static final Unit<Dimensionless> PIECE = billingUnits(Unit.ONE);
+
+	public static final Unit<Dimensionless> DOZEN = billingUnits(PIECE
+			.times(12));
+
+	// TODO
+	// Has regex limitation 1 kg ~ [Small] size
+	// public static final Unit<Dimensionless> SMALL = billingUnits(Unit.ONE);
+	// public static final Unit<Dimensionless> MEDIUM = billingUnits(SMALL
+	// .times(5));
+	// public static final Unit<Dimensionless> BIG =
+	// billingUnits(SMALL.times(10));
 
 	// TODO
 	// need to check the need for pkt
@@ -33,11 +45,12 @@ public final class BillingUnits extends SystemOfUnits {
 	// current implementation is ambiguous as 1-dz to 1-pkt considered as 1pcs
 	// public static final Unit<Dimensionless> PACKET = PIECE.alternate("pkt");
 
-	public static final Unit<Dimensionless> DOZEN = retaSI(PIECE.times(12));
-
 	static {
 		UnitFormat.getInstance().label(BillingUnits.PIECE, "pcs");
 		UnitFormat.getInstance().label(BillingUnits.DOZEN, "dz");
+		// UnitFormat.getInstance().label(BillingUnits.SMALL, "small");
+		// UnitFormat.getInstance().label(BillingUnits.MEDIUM, "medium");
+		// UnitFormat.getInstance().label(BillingUnits.BIG, "big");
 		INR = new Currency("INR");
 	}
 
@@ -46,7 +59,7 @@ public final class BillingUnits extends SystemOfUnits {
 		return Collections.unmodifiableSet(UNITS);
 	}
 
-	private static <U extends Unit<?>> U retaSI(U unit) {
+	private static <U extends Unit<?>> U billingUnits(U unit) {
 		UNITS.add(unit);
 		return unit;
 	}

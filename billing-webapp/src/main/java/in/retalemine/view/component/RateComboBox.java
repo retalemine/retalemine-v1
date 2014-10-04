@@ -1,6 +1,6 @@
 package in.retalemine.view.component;
 
-import in.retalemine.util.BillingUnits;
+import in.retalemine.unit.BillingUnits;
 import in.retalemine.view.constants.BillingConstants;
 import in.retalemine.view.event.BillItemSelectionEvent;
 import in.retalemine.view.event.CartSelectionEvent;

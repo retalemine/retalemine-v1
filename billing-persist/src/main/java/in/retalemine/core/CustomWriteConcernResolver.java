@@ -16,5 +16,4 @@ public class CustomWriteConcernResolver implements WriteConcernResolver {
 		}
 		return action.getDefaultWriteConcern();
 	}
-
 }

@@ -20,6 +20,7 @@
 		<url>git@retalemine/retalemine-v1.git</url>
 	</scm>
 	<modules>
+		<module>billing-common</module>
 		<module>billing-persist</module>
 		<module>billing-webapp</module>
 	</modules>

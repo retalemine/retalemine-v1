@@ -1,6 +1,6 @@
 package in.retalemine.view.component;
 
-import in.retalemine.util.BillingComputationUtil;
+import in.retalemine.util.ComputationUtil;
 import in.retalemine.view.constants.BillingConstants;
 
 import java.util.Collection;
@@ -99,8 +99,7 @@ public class QuantityComponent extends Table {
 
 				@Override
 				public void addNewItem(String newItemCaption) {
-					String unit = BillingComputationUtil
-							.getValidUnit(newItemCaption);
+					String unit = ComputationUtil.getValidUnit(newItemCaption);
 					if (null != unit) {
 						setValue(unit);
 					}

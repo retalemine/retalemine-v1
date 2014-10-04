@@ -3,9 +3,9 @@ package in.retalemine.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BillingRegExUtil {
+public class InputParser {
 
-	private BillingRegExUtil() {
+	private InputParser() {
 	}
 
 	public static String getCamelCaseString(String input) {

@@ -25,10 +25,10 @@ public class BillItem<U extends Quantity, V extends Quantity> {
 	@Transient
 	private Amount<Money> amount;
 
-	public BillItem(){
-		
+	public BillItem() {
+
 	}
-	
+
 	public BillItem(String productName, Measure<Double, U> productUnit,
 			String productDescription, Amount<Money> unitPrice,
 			Measure<Double, V> quantity, Amount<Money> amount) {
@@ -40,13 +40,6 @@ public class BillItem<U extends Quantity, V extends Quantity> {
 		this.amount = amount;
 	}
 
-//	public BillItem(String productDescription, Amount<Money> unitPrice,
-//			Measure<Double, V> quantity) {
-//		this.productDescription = productDescription;
-//		this.unitPrice = unitPrice;
-//		this.quantity = quantity;
-//	}
-	
 	public static <U extends Quantity, V extends Quantity> BillItem<U, V> valueOf(
 			String productName, Measure<Double, U> productUnit,
 			String productDescription, Amount<Money> unitPrice,
@@ -54,53 +47,5 @@ public class BillItem<U extends Quantity, V extends Quantity> {
 		return new BillItem<U, V>(productName, productUnit, productDescription,
 				unitPrice, quantity, amount);
 	}
-//
-//	public String getProductName() {
-//		return productName;
-//	}
-//
-//	public void setProductName(String productName) {
-//		this.productName = productName;
-//	}
-//
-//	public Measure<Double, U> getProductUnit() {
-//		return productUnit;
-//	}
-//
-//	public void setProductUnit(Measure<Double, U> productUnit) {
-//		this.productUnit = productUnit;
-//	}
-//
-//	public String getProductDescription() {
-//		return productDescription;
-//	}
-//
-//	public void setProductDescription(String productDescription) {
-//		this.productDescription = productDescription;
-//	}
-//
-//	public Amount<Money> getUnitPrice() {
-//		return unitPrice;
-//	}
-//
-//	public void setUnitPrice(Amount<Money> unitPrice) {
-//		this.unitPrice = unitPrice;
-//	}
-//
-//	public Measure<Double, V> getQuantity() {
-//		return quantity;
-//	}
-//
-//	public void setQuantity(Measure<Double, V> quantity) {
-//		this.quantity = quantity;
-//	}
-//
-//	public Amount<Money> getAmount() {
-//		return amount;
-//	}
-//
-//	public void setAmount(Amount<Money> amount) {
-//		this.amount = amount;
-//	}
 
 }
