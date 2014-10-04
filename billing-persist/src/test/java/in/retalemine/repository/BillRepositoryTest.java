@@ -34,7 +34,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:spring-mongo-config.xml" })
+@ContextConfiguration(locations = { "classpath:spring-mongo-config.xml",
+		"classpath:test-spring-mongo-config.xml" })
 public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 
 	@Autowired
@@ -79,12 +80,16 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 		return new Object[][] { { bill } };
 	}
 
-	@Test(dataProvider = "billDataProvider")
+	@Test(enabled = true, dataProvider = "billDataProvider")
 	public void test_save(Bill bill) {
 		billrepository.deleteAll();
 		billrepository.save(bill);
 	}
 
+	@Test(enabled = true)
+	public void test_findAll() {
+	}
+	
 	@Test(enabled = true, expectedExceptions = DuplicateKeyException.class)
 	public void test_insertDuplicate() {
 		Bill fetchBill = billrepository.findOne(new Query(), Bill.class);

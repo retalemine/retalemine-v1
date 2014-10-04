@@ -22,7 +22,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:spring-mongo-config.xml" })
+@ContextConfiguration(locations = { "classpath:spring-mongo-config.xml",
+		"classpath:test-spring-mongo-config.xml" })
 public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 
 	@Autowired
