@@ -1,6 +1,6 @@
 package in.retalemine.view.component;
 
-import in.retalemine.unit.BillingUnits;
+import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.util.BillingComputationUtil;
 import in.retalemine.view.VO.TaxVO;
 import in.retalemine.view.constants.BillingConstants;

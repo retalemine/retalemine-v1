@@ -1,6 +1,6 @@
 package in.retalemine.view.UI;
 
-import in.retalemine.unit.BillingUnits;
+import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.view.component.BillingCartBuilder;
 import in.retalemine.view.component.BillingFooterBuilder;
 import in.retalemine.view.component.BillingHeaderBuilder;

@@ -1,15 +1,14 @@
 package in.retalemine.util;
 
-import in.retalemine.unit.BillingUnits;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import in.retalemine.measure.unit.BillingUnits;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.measure.Measure;
 import javax.measure.converter.ConversionException;
@@ -27,19 +26,24 @@ public class ComputationUtil {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ComputationUtil.class);
 
-	private static final List<Set<String>> validUnitsGroup = new ArrayList<Set<String>>() {
-		private static final long serialVersionUID = 4846226789583481150L;
-
+	private static final List<String[]> validUnitsGroup = new ArrayList<String[]>(
+			6) {
+		private static final long serialVersionUID = 2017339255473656836L;
 		{
-			add(new LinkedHashSet<String>(Arrays.asList("kg", "g")));
-			add(new LinkedHashSet<String>(Arrays.asList("L", "mL")));
-			add(new LinkedHashSet<String>(Arrays.asList("m", "ft", "in")));
-			add(new LinkedHashSet<String>(Arrays.asList("pcs", "dz"))); // "pkt"
-			// Following units pcs, pkt, dz applicable for all other units
-			// should be the last entry and used by {@link getValidAltUnitList}
+			add(new String[] { "kg", "g" });
+			add(new String[] { "L", "mL" });
+			add(new String[] { "m", "ft", "in" });
+			add(new String[] { "Small" });
+			add(new String[] { "Medium" });
+			add(new String[] { "Big" });
 		}
 	};
-	private static final HashMap<String, String> validUnitsMapper = new HashMap<String, String>() {
+
+	private static final String[] validCommonUnitsGroup = new String[] { "pcs",
+			"dz" }; // "pkt"
+
+	private static final Map<String, String> validUnitsMapper = new HashMap<String, String>(
+			40) {
 		private static final long serialVersionUID = 2572938028394300264L;
 		{
 			put("kg", "kg");
@@ -66,10 +70,17 @@ public class ComputationUtil {
 			put("dz", "dz");
 			put("dozen", "dz");
 			put("dozens", "dz");
+			put("small", "Small");
+			put("s", "Small");
+			put("medium", "Medium");
+			put("med", "Medium");
+			put("big", "Big");
+			put("b", "Big");
 		}
 	};
 
-	private static final Map<String, Double> taxPercentMap = new HashMap<String, Double>() {
+	private static final Map<String, Double> taxPercentMap = new HashMap<String, Double>(
+			4) {
 
 		private static final long serialVersionUID = 570223805652706264L;
 
@@ -84,25 +95,48 @@ public class ComputationUtil {
 	}
 
 	public static String getValidUnit(String unit) {
-		return validUnitsMapper.get(unit.toLowerCase());
+		unit = null == unit ? "" : unit.trim().toLowerCase();
+		return validUnitsMapper.get(unit);
 	}
 
-	public static Set<String> getValidUnits() {
-		Set<String> validUnits = new HashSet<String>(validUnitsGroup.size() * 3);
-		for (Set<String> units : validUnitsGroup) {
-			validUnits.addAll(units);
+	public static List<String> getValidUnits() {
+		List<String> validUnits = new ArrayList<String>(12);
+		for (String[] units : validUnitsGroup) {
+			validUnits.addAll(Arrays.asList(units));
 		}
+		validUnits.addAll(Arrays.asList(validCommonUnitsGroup));
 		return validUnits;
 	}
 
-	public static Set<String> getValidUnits(String unit) {
-		for (Set<String> units : validUnitsGroup) {
-			if (units.contains(unit)) {
-				units.addAll(validUnitsGroup.get(validUnitsGroup.size() - 1));
-				return units;
+	public static List<String> getValidUnits(String unit) {
+		List<String> rUnits = null;
+		if (null == unit || (unit = unit.trim()).isEmpty()
+				|| null == (unit = getValidUnit(unit))) {
+			return null;
+		}
+		for (String[] units : validUnitsGroup) {
+			if (Arrays.asList(units).contains(unit)) {
+				rUnits = new ArrayList<String>(units.length
+						+ validCommonUnitsGroup.length);
+				rUnits.addAll(Arrays.asList(units));
+				rUnits.addAll(Arrays.asList(validCommonUnitsGroup));
+				return rUnits;
 			}
 		}
+		rUnits = Arrays.asList(validCommonUnitsGroup);
+		if (rUnits.contains(unit)) {
+			return rUnits;
+		}
 		return null;
+	}
+
+	public static Unit<?> getBaseUnit(String unit) {
+		List<String> validUnits = getValidUnits(unit);
+		if (null == validUnits) {
+			return null;
+		}
+		String units[] = validUnits.toArray(new String[0]);
+		return Unit.valueOf(units[0]);
 	}
 
 	public static Map<String, Double> getTaxPercentMap() {
@@ -113,12 +147,17 @@ public class ComputationUtil {
 	public static <U extends Quantity, V extends Quantity, W extends Quantity> Measure<Double, ? extends Quantity> computeNetQuantity(
 			Measure<Double, U> productUnit, Measure<Double, V> quantity1,
 			Measure<Double, W> quantity2) {
+
+		assertThat(quantity1, notNullValue());
+		assertThat(quantity2, notNullValue());
+
 		if (quantity1.getUnit().equals(quantity2.getUnit())) {
 			logger.debug("equal units");
 			return Measure.valueOf(quantity1.getValue() + quantity2.getValue(),
 					quantity1.getUnit());
 		} else {
 			logger.debug("not equal units");
+			assertThat(productUnit, notNullValue());
 			String units[] = getValidUnits(productUnit.getUnit().toString())
 					.toArray(new String[0]);
 			return computeNetQuantity(productUnit,
@@ -153,5 +192,4 @@ public class ComputationUtil {
 			}
 		}
 	}
-
 }
