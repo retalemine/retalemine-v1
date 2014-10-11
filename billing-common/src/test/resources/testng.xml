@@ -1,0 +1,36 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="billing-common" verbose="1">
+
+	<test name="regression1">
+		<classes>
+			<class name="in.retalemine.measure.unit.BillingUnitsTest" />
+			<class name="in.retalemine.util.ComputationUtilTest" />
+		</classes>
+	</test>
+
+	<!-- <test name="Regression2" allow-return-values="true"> -->
+	<!-- <groups> -->
+	<!-- <run> -->
+	<!-- <exclude name="brokenTests" /> -->
+	<!-- <include name="checkinTests" /> -->
+	<!-- </run> -->
+	<!-- </groups> -->
+	<!-- <classes> -->
+	<!-- <class name="in.retalemine.util.ComputationUtilTest"> -->
+	<!-- <methods> -->
+	<!-- <include name=".*enabledTestMethod.*" /> -->
+	<!-- <exclude name=".*brokenTestMethod.*" /> -->
+	<!-- </methods> -->
+	<!-- </class> -->
+	<!-- </classes> -->
+	<!-- </test> -->
+
+	<!-- <test name="regression3"> -->
+	<!-- <groups> -->
+	<!-- <dependencies> -->
+	<!-- <group name="c" depends-on="billing-unit" /> -->
+	<!-- </dependencies> -->
+	<!-- </groups> -->
+	<!-- </test> -->
+</suite>

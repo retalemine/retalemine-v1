@@ -162,8 +162,8 @@ public class BillingTable extends Table {
 			Measure<Double, ? extends Quantity> oldNetQuantity = (Measure<Double, ? extends Quantity>) getItemValue(
 					itemId, BillingConstants.PID_NET_QUANTITY);
 			Measure<Double, ? extends Quantity> finalNetQuantity = ComputationUtil
-					.computeNetQuantity(eventItem.getProductUnit(),
-							oldNetQuantity, eventItem.getNetQuantity());
+					.computeNetQuantity(oldNetQuantity,
+							eventItem.getNetQuantity());
 			setItemValue(itemId, BillingConstants.PID_NET_QUANTITY,
 					finalNetQuantity);
 			setItemValue(itemId, BillingConstants.PID_AMOUNT,
