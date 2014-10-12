@@ -68,7 +68,7 @@ public class TestDataProvider {
 				{ "10pkt", "10pkt", "20pkt" }, { "10pkt", "14pkt", "2dz" },
 
 				{ "6pkt", "2dz", "2.5dz" }, { "2dz", "6pkt", "2.5dz" },
-				{ "2dz", "10pkt", "34pkt" },
+				{ "2dz", "10pkt", "34pkt" }
 
 		};
 		return constructSumUpData(validDatas, 3);
@@ -95,12 +95,21 @@ public class TestDataProvider {
 	public static Object[][] amountData() {
 		String[][] validDatas = new String[][] {
 
-				// [kg,g]
-				{ "1kg", "45", "2kg", "90" }, { "250g", "12", "500g", "24" },
+				// [kg,g] [L,mL]
+				{ "1kg", "45", "2kg", "90" },
+				{ "250g", "12", "500g", "24" },
 				{ "1kg", "45", "500g", "22.5" },
 				{ "250g", "12", "1.5kg", "72" },
 				{ "200g", "12", "1.5kg", "90" },
 				{ "1kg", "45", "100g", "4.5" },
+
+				// [m,ft,in]
+				{ "10m", "90", "2.5m", "22.5" },
+
+				// [dz,pcs]
+				{ "6pcs", "75", "2pcs", "25" },
+				{ "1dz", "90", "15pcs", "112.5" },
+				{ "6pcs", "70", "1dz", "140" }
 
 		};
 		return constructAmountData(validDatas, 4);

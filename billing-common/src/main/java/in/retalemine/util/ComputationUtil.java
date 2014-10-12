@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.measure.Measure;
-import javax.measure.converter.UnitConverter;
 import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
 
@@ -200,13 +199,11 @@ public class ComputationUtil {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <U extends Quantity, V extends Quantity> Amount<Money> computeAmount(
 			Measure<Double, U> unitQuantity, Amount<Money> unitRate,
 			Measure<Double, V> netQuantity) {
-		UnitConverter toUnitQuantityUnit = netQuantity.getUnit()
-				.getConverterTo(unitQuantity.getUnit());
-		return unitRate
-				.times(toUnitQuantityUnit.convert(netQuantity.getValue())
-						/ unitQuantity.getValue());
+		return unitRate.times(netQuantity.to((Unit<V>) unitQuantity.getUnit())
+				.getValue() / unitQuantity.getValue());
 	}
 }
