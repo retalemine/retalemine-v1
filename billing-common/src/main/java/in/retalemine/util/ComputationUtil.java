@@ -3,7 +3,7 @@ package in.retalemine.util;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import in.retalemine.measure.unit.BillingUnits;
+import in.retalemine.constants.BillingConstants;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.measure.Measure;
-import javax.measure.converter.ConversionException;
 import javax.measure.converter.UnitConverter;
 import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
@@ -162,7 +161,8 @@ public class ComputationUtil {
 					quantityX.getValue() + quantityY.getValue(),
 					quantityX.getUnit()).to(
 					(Unit<X>) getBaseUnit(quantityX.getUnit().toString()));
-			DecimalFormat formatter = new DecimalFormat("0.0#");
+			DecimalFormat formatter = new DecimalFormat(
+					BillingConstants.MEASURE_VALUE_FORMAT);
 			if (result.getValue() < 1
 					|| !formatter.format(result.getValue()).equals(
 							result.getValue().toString())) {
@@ -174,7 +174,8 @@ public class ComputationUtil {
 		} else {
 			logger.debug("X,Y different and either one non Standard ");
 			Measure<Double, ? extends Quantity> result;
-			DecimalFormat formatter = new DecimalFormat("0.0#");
+			DecimalFormat formatter = new DecimalFormat(
+					BillingConstants.MEASURE_VALUE_FORMAT);
 			String unitX = quantityX.getUnit().toString();
 			if (!isBaseUnit(unitX)) {
 				result = quantityX.to((Unit<X>) getBaseUnit(unitX));
@@ -202,27 +203,10 @@ public class ComputationUtil {
 	public static <U extends Quantity, V extends Quantity> Amount<Money> computeAmount(
 			Measure<Double, U> unitQuantity, Amount<Money> unitRate,
 			Measure<Double, V> netQuantity) {
-		if (unitQuantity.getUnit().isCompatible(netQuantity.getUnit())) {
-			UnitConverter toNetQuantityUnit = unitQuantity.getUnit()
-					.getConverterTo(netQuantity.getUnit());
-			return unitRate.times(netQuantity.getValue()
-					/ toNetQuantityUnit.convert(unitQuantity.getValue()));
-		} else {
-			if (BillingUnits.PIECE.equals(netQuantity.getUnit())) {
-				return unitRate.times(netQuantity.getValue());
-			}
-			// else if
-			// (RetaSI.PACKET.equals(netQuantity.getUnit())) {
-			// return unitPrice.times(
-			// netQuantity.getValue());
-			// }
-			else if (BillingUnits.DOZEN.equals(netQuantity.getUnit())) {
-				return unitRate.times(netQuantity.getValue() * 12);
-			} else {
-				throw new ConversionException(String.format(
-						"Failed conversion : %s -> %s", unitQuantity.getUnit(),
-						netQuantity.getUnit()));
-			}
-		}
+		UnitConverter toUnitQuantityUnit = netQuantity.getUnit()
+				.getConverterTo(unitQuantity.getUnit());
+		return unitRate
+				.times(toUnitQuantityUnit.convert(netQuantity.getValue())
+						/ unitQuantity.getValue());
 	}
 }

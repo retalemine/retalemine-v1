@@ -2,11 +2,11 @@ package in.retalemine.data;
 
 import in.retalemine.measure.unit.BillingUnits;
 
-import java.lang.reflect.Method;
-
 import javax.measure.Measure;
+import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
 
+import org.jscience.physics.amount.Amount;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
@@ -17,8 +17,8 @@ public class TestDataProvider {
 		BillingUnits.getInstance();
 	}
 
-	@DataProvider(name = "measureSumUpData")
-	public static Object[][] measureSumUpData(Method methodName) {
+	@DataProvider(name = "netQuantityData")
+	public static Object[][] netQuantityData() {
 		String[][] validDatas = new String[][] {
 
 				// [kg, g]
@@ -71,7 +71,11 @@ public class TestDataProvider {
 				{ "2dz", "10pkt", "34pkt" },
 
 		};
+		return constructSumUpData(validDatas, 3);
+	}
 
+	@DataProvider(name = "netQuantityExceptionData")
+	public static Object[][] netQuantityExceptionData() {
 		String[][] inValidDatas = new String[][] {
 
 				// null check
@@ -84,12 +88,48 @@ public class TestDataProvider {
 				{ "2kg", "8pkt" }
 
 		};
+		return constructSumUpData(inValidDatas, 2);
+	}
 
-		if ("test_computeNetQuantity".equals(methodName.getName())) {
-			return constructSumUpData(validDatas, 3);
-		} else {
-			return constructSumUpData(inValidDatas, 2);
+	@DataProvider(name = "amountData")
+	public static Object[][] amountData() {
+		String[][] validDatas = new String[][] {
+
+				// [kg,g]
+				{ "1kg", "45", "2kg", "90" }, { "250g", "12", "500g", "24" },
+				{ "1kg", "45", "500g", "22.5" },
+				{ "250g", "12", "1.5kg", "72" },
+				{ "200g", "12", "1.5kg", "90" },
+				{ "1kg", "45", "100g", "4.5" },
+
+		};
+		return constructAmountData(validDatas, 4);
+	}
+
+	@DataProvider(name = "amountExceptionData")
+	public static Object[][] amountExceptionData() {
+		String[][] inValidDatas = new String[][] {
+
+				// [kg,g]
+				{ "1kg", "45", "2L" }, { "1kg", "45", "2m" },
+				{ "1kg", "45", "2in" }, { "1kg", "45", "2ft" },
+				{ "1kg", "45", "2dz" }, { "1kg", "45", "2pcs" },
+				{ "1kg", "45", "2pkt" }
+
+		};
+		return constructAmountData(inValidDatas, 3);
+	}
+
+	private static Measure<Double, ? extends Quantity> computeQuantityMeasure(
+			String data) {
+		Double value;
+		try {
+			value = Double.valueOf(data.replaceAll("[a-zA-Z]", ""));
+		} catch (NumberFormatException e) {
+			value = 1.0;
 		}
+		String unit = data.replaceAll("[0-9.]", "");
+		return Measure.valueOf(value, Unit.valueOf(unit));
 	}
 
 	private static Object[][] constructSumUpData(String[][] validDatas,
@@ -100,14 +140,7 @@ public class TestDataProvider {
 			j = 0;
 			for (String data : validData) {
 				if (null != data) {
-					Double value;
-					try {
-						value = Double.valueOf(data.replaceAll("[a-zA-Z]", ""));
-					} catch (NumberFormatException e) {
-						value = 1.0;
-					}
-					String unit = data.replaceAll("[0-9.]", "");
-					rVal[i][j++] = Measure.valueOf(value, Unit.valueOf(unit));
+					rVal[i][j++] = computeQuantityMeasure(data);
 				} else {
 					rVal[i][j++] = null;
 				}
@@ -116,4 +149,29 @@ public class TestDataProvider {
 		}
 		return rVal;
 	}
+
+	private static Object[][] constructAmountData(String[][] validDatas,
+			int rowLength) {
+		int i = 0, j = 0;
+		Object[][] rVal = new Object[validDatas.length][rowLength];
+		for (String[] validData : validDatas) {
+			j = 0;
+			for (String data : validData) {
+				if (null != data) {
+					if (j % 2 == 0) {
+						rVal[i][j++] = computeQuantityMeasure(data);
+
+					} else {
+						rVal[i][j++] = Amount.valueOf(Double.valueOf(data),
+								BillingUnits.INR);
+					}
+				} else {
+					rVal[i][j++] = null;
+				}
+			}
+			i++;
+		}
+		return rVal;
+	}
+
 }

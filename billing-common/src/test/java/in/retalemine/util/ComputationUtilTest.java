@@ -8,9 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.measure.Measure;
+import javax.measure.converter.ConversionException;
 import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
 
+import org.jscience.economics.money.Money;
+import org.jscience.physics.amount.Amount;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -102,7 +105,7 @@ public class ComputationUtilTest {
 		Assert.assertNull(ComputationUtil.getBaseUnit("dozz "));
 	}
 
-	@Test(enabled = true, dataProvider = "measureSumUpData", dataProviderClass = TestDataProvider.class)
+	@Test(enabled = true, dataProvider = "netQuantityData", dataProviderClass = TestDataProvider.class)
 	public void test_computeNetQuantity(
 			Measure<Double, ? extends Quantity> quantityX,
 			Measure<Double, ? extends Quantity> quantityY,
@@ -112,16 +115,29 @@ public class ComputationUtilTest {
 				result);
 	}
 
-	@Test(enabled = true, dataProvider = "measureSumUpData", dataProviderClass = TestDataProvider.class, expectedExceptions = AssertionError.class)
+	@Test(enabled = true, dataProvider = "netQuantityExceptionData", dataProviderClass = TestDataProvider.class, expectedExceptions = AssertionError.class)
 	public void test_computeNetQuantityExceptions(
 			Measure<Double, ? extends Quantity> quantityX,
 			Measure<Double, ? extends Quantity> quantityY) {
 		ComputationUtil.computeNetQuantity(quantityX, quantityY);
 	}
 
-	@Test(enabled = true)
-	public void test_computeAmount() {
-
+	@Test(enabled = true, dataProvider = "amountData", dataProviderClass = TestDataProvider.class)
+	public void test_computeAmount(
+			Measure<Double, ? extends Quantity> unitQuantity,
+			Amount<Money> unitRate,
+			Measure<Double, ? extends Quantity> netQuantity,
+			Amount<Money> result) {
+		Assert.assertEquals(
+				ComputationUtil.computeAmount(unitQuantity, unitRate,
+						netQuantity).toText(), result.toText());
 	}
 
+	@Test(enabled = true, dataProvider = "amountExceptionData", dataProviderClass = TestDataProvider.class, expectedExceptions = ConversionException.class)
+	public void test_computeAmountExceptions(
+			Measure<Double, ? extends Quantity> unitQuantity,
+			Amount<Money> unitRate,
+			Measure<Double, ? extends Quantity> netQuantity) {
+		ComputationUtil.computeAmount(unitQuantity, unitRate, netQuantity);
+	}
 }
