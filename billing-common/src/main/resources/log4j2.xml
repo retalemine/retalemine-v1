@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Appenders>
-		<File name="fileAppender" fileName="billing-common.log"
-			append="false">
+		<File name="fileAppender" fileName="billing-common.log" append="false">
 			<PatternLayout pattern="%d %-5p [%t] (%F:%L) - %m%n" />
 		</File>
 		<Console name="STDOUT" target="SYSTEM_OUT">

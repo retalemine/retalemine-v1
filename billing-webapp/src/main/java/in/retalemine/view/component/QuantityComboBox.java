@@ -144,7 +144,7 @@ public class QuantityComboBox extends ComboBox {
 		FormLayout mailLayout = new FormLayout();
 		final QuantityComponent qty = new QuantityComponent(
 				BillingConstants.BOX_LABEL_UNIT_QUANTITY,
-				String.valueOf(quantity), ComputationUtil.getValidUnits(unit
+				String.valueOf(quantity), ComputationUtil.getValidUnitsGroup(unit
 						.toString()));
 		Button submit = new Button(BillingConstants.BOX_LABEL_SUBMIT);
 

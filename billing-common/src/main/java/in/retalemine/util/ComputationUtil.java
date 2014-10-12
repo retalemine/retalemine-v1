@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import in.retalemine.measure.unit.BillingUnits;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -104,7 +105,7 @@ public class ComputationUtil {
 		return validUnits;
 	}
 
-	public static List<String> getValidUnits(String unit) {
+	public static List<String> getValidUnitsGroup(String unit) {
 		List<String> rUnits = null;
 		if (null == unit || (unit = unit.trim()).isEmpty()
 				|| null == (unit = getValidUnit(unit))) {
@@ -120,7 +121,7 @@ public class ComputationUtil {
 	}
 
 	public static Unit<?> getBaseUnit(String unit) {
-		List<String> validUnits = getValidUnits(unit);
+		List<String> validUnits = getValidUnitsGroup(unit);
 		if (null == validUnits) {
 			return null;
 		}
@@ -129,7 +130,7 @@ public class ComputationUtil {
 	}
 
 	public static Boolean isBaseUnit(String unit) {
-		List<String> validUnits = getValidUnits(unit);
+		List<String> validUnits = getValidUnitsGroup(unit);
 		if (null == validUnits) {
 			return false;
 		}
@@ -161,24 +162,40 @@ public class ComputationUtil {
 					quantityX.getValue() + quantityY.getValue(),
 					quantityX.getUnit()).to(
 					(Unit<X>) getBaseUnit(quantityX.getUnit().toString()));
-			if (result.getValue() < 1) {
+			DecimalFormat formatter = new DecimalFormat("0.0#");
+			if (result.getValue() < 1
+					|| !formatter.format(result.getValue()).equals(
+							result.getValue().toString())) {
 				return Measure.valueOf(
 						quantityX.getValue() + quantityY.getValue(),
 						quantityX.getUnit());
 			}
 			return result;
 		} else {
-			logger.debug("X,Y different and either one non Standard "
-					+ quantityX + "  " + quantityY);
-			String unit = quantityX.getUnit().toString();
-			if (!isBaseUnit(unit)) {
-				quantityX = quantityX.to((Unit<X>) getBaseUnit(unit));
+			logger.debug("X,Y different and either one non Standard ");
+			Measure<Double, ? extends Quantity> result;
+			DecimalFormat formatter = new DecimalFormat("0.0#");
+			String unitX = quantityX.getUnit().toString();
+			if (!isBaseUnit(unitX)) {
+				result = quantityX.to((Unit<X>) getBaseUnit(unitX));
+				if (formatter.format(result.getValue()).equals(
+						result.getValue().toString())) {
+					quantityX = (Measure<Double, X>) result;
+					unitX = quantityX.getUnit().toString();
+				}
 			}
-			unit = quantityY.getUnit().toString();
-			if (!isBaseUnit(unit)) {
-				quantityY = quantityY.to((Unit<Y>) getBaseUnit(unit));
+			String unitY = quantityY.getUnit().toString();
+			if (!unitY.equals(unitX)) {
+				result = quantityY.to((Unit<Y>) Unit.valueOf(unitX));
+				if (formatter.format(result.getValue()).equals(
+						result.getValue().toString())) {
+					quantityY = (Measure<Double, Y>) result;
+				} else {
+					quantityX = quantityX.to((Unit<X>) Unit.valueOf(unitY));
+				}
 			}
-			return computeNetQuantity(quantityX, quantityY);
+			return Measure.valueOf(quantityX.getValue() + quantityY.getValue(),
+					quantityX.getUnit());
 		}
 	}
 

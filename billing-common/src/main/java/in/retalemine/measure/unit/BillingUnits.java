@@ -32,12 +32,10 @@ public final class BillingUnits extends SystemOfUnits {
 	public static final Unit<Dimensionless> PIECE = billingUnits(DOZEN
 			.divide(12));
 
-	public static final Unit<Dimensionless> PACKET = billingUnits(DOZEN
-			.divide(12));
+	public static final Unit<Dimensionless> PACKET = PIECE.alternate("pkt");
 
 	static {
 		UnitFormat.getInstance().label(BillingUnits.DOZEN, "dz");
-		UnitFormat.getInstance().label(BillingUnits.PACKET, "pkt");
 		UnitFormat.getInstance().label(BillingUnits.PIECE, "pcs");
 	}
 

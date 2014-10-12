@@ -12,10 +12,18 @@ import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test()
 public class ComputationUtilTest {
+
+	@BeforeClass
+	public void setup() {
+		// TODO ensure that BillingUnits instance is loaded even before
+		// calling Unit.valueOf()
+		BillingUnits.getInstance();
+	}
 
 	@Test(enabled = true)
 	public void test_getValidUnit() {
@@ -41,35 +49,31 @@ public class ComputationUtilTest {
 	 */
 	@Test(enabled = true)
 	public void test_getValidUnitsIntegrity() {
-		// TODO
-		// How to ensure that BillingUnits instance is loaded even before
-		// calling Unit.valueOf()
-		BillingUnits.getInstance();
 		for (String unit : ComputationUtil.getValidUnits()) {
 			Assert.assertNotNull(Unit.valueOf(unit));
+			Assert.assertEquals(Unit.valueOf(unit).toString(), unit);
 		}
 	}
 
 	@Test(enabled = true)
 	public void test_getValidUnits() {
-		Assert.assertEquals(ComputationUtil.getValidUnits("g"),
+		Assert.assertEquals(ComputationUtil.getValidUnitsGroup("g"),
 				Arrays.asList("kg", "g"));
-		Assert.assertEquals(ComputationUtil.getValidUnits("inch"),
+		Assert.assertEquals(ComputationUtil.getValidUnitsGroup("inch"),
 				Arrays.asList("in"));
-		Assert.assertEquals(ComputationUtil.getValidUnits("dozen"),
+		Assert.assertEquals(ComputationUtil.getValidUnitsGroup("dozen"),
 				Arrays.asList("dz", "pcs"));
-		Assert.assertNull(ComputationUtil.getValidUnits(null));
-		Assert.assertNull(ComputationUtil.getValidUnits(""));
-		Assert.assertNull(ComputationUtil.getValidUnits(" "));
-		Assert.assertNull(ComputationUtil.getValidUnits("killgram"));
+		Assert.assertNull(ComputationUtil.getValidUnitsGroup(null));
+		Assert.assertNull(ComputationUtil.getValidUnitsGroup(""));
+		Assert.assertNull(ComputationUtil.getValidUnitsGroup(" "));
+		Assert.assertNull(ComputationUtil.getValidUnitsGroup("killgram"));
 	}
 
 	@Test(enabled = true)
 	public void test_checkValidUnitsCompatibility() {
 		HashSet<List<String>> validUnitsSet = new HashSet<List<String>>();
-		BillingUnits.getInstance();
 		for (String unit : ComputationUtil.getValidUnits()) {
-			validUnitsSet.add(ComputationUtil.getValidUnits(unit));
+			validUnitsSet.add(ComputationUtil.getValidUnitsGroup(unit));
 		}
 		Assert.assertEquals(validUnitsSet.size(), 7);
 		for (List<String> list : validUnitsSet) {
@@ -83,7 +87,6 @@ public class ComputationUtilTest {
 
 	@Test(enabled = true)
 	public void test_getBaseUnit() {
-		BillingUnits.getInstance();
 		Assert.assertEquals(ComputationUtil.getBaseUnit("g"),
 				Unit.valueOf("kg"));
 		Assert.assertEquals(ComputationUtil.getBaseUnit("liter"),
@@ -107,6 +110,13 @@ public class ComputationUtilTest {
 		Assert.assertEquals(
 				ComputationUtil.computeNetQuantity(quantityX, quantityY),
 				result);
+	}
+
+	@Test(enabled = true, dataProvider = "measureSumUpData", dataProviderClass = TestDataProvider.class, expectedExceptions = AssertionError.class)
+	public void test_computeNetQuantityExceptions(
+			Measure<Double, ? extends Quantity> quantityX,
+			Measure<Double, ? extends Quantity> quantityY) {
+		ComputationUtil.computeNetQuantity(quantityX, quantityY);
 	}
 
 	@Test(enabled = true)
