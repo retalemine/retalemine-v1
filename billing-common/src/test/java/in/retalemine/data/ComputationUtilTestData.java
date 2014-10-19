@@ -10,7 +10,7 @@ import org.jscience.physics.amount.Amount;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
-public class TestDataProvider {
+public class ComputationUtilTestData {
 
 	@BeforeClass
 	public void setup() {

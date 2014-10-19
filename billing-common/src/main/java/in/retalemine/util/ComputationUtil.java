@@ -41,10 +41,11 @@ public class ComputationUtil {
 	};
 
 	private static final Map<String, String> validUnitsMapper = new HashMap<String, String>(
-			32) {
+			35) {
 		private static final long serialVersionUID = 2572938028394300264L;
 		{
 			put("kg", "kg");
+			put("kilogram", "kg");
 			put("g", "g");
 			put("gram", "g");
 			put("l", "L");
@@ -68,6 +69,18 @@ public class ComputationUtil {
 			put("dz", "dz");
 			put("dozen", "dz");
 			put("dozens", "dz");
+		}
+	};
+
+	private static final List<String> validUnitDescList = new ArrayList<String>(
+			4) {
+		private static final long serialVersionUID = 6320100716299157709L;
+
+		{
+			add("bottle");
+			add("btl");
+			add("packet");
+			add("pkt");
 		}
 	};
 
@@ -134,6 +147,10 @@ public class ComputationUtil {
 		}
 		String units[] = validUnits.toArray(new String[0]);
 		return units[0].equals(unit);
+	}
+
+	public static List<String> getValidUnitDescriptionList() {
+		return validUnitDescList;
 	}
 
 	public static Map<String, Double> getTaxPercentMap() {
