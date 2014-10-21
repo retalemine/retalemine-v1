@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.measure.quantity.Dimensionless;
+import javax.measure.quantity.Quantity;
 import javax.measure.unit.SystemOfUnits;
 import javax.measure.unit.Unit;
 import javax.measure.unit.UnitFormat;
@@ -49,4 +50,7 @@ public final class BillingUnits extends SystemOfUnits {
 		return unit;
 	}
 
+	public static Unit<? extends Quantity> valueOf(CharSequence csq) {
+		return Unit.valueOf(csq);
+	}
 }

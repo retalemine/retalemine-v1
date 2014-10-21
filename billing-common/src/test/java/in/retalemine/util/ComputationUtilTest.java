@@ -10,7 +10,6 @@ import java.util.List;
 import javax.measure.Measure;
 import javax.measure.converter.ConversionException;
 import javax.measure.quantity.Quantity;
-import javax.measure.unit.Unit;
 
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
@@ -22,9 +21,6 @@ public class ComputationUtilTest {
 
 	@BeforeClass
 	public void setup() {
-		// TODO ensure that BillingUnits instance is loaded even before
-		// calling Unit.valueOf()
-		BillingUnits.getInstance();
 	}
 
 	@Test(enabled = true)
@@ -52,8 +48,8 @@ public class ComputationUtilTest {
 	@Test(enabled = true)
 	public void test_getValidUnitsIntegrity() {
 		for (String unit : ComputationUtil.getValidUnits()) {
-			Assert.assertNotNull(Unit.valueOf(unit));
-			Assert.assertEquals(Unit.valueOf(unit).toString(), unit);
+			Assert.assertNotNull(BillingUnits.valueOf(unit));
+			Assert.assertEquals(BillingUnits.valueOf(unit).toString(), unit);
 		}
 	}
 
@@ -80,9 +76,8 @@ public class ComputationUtilTest {
 		Assert.assertEquals(validUnitsSet.size(), 7);
 		for (List<String> list : validUnitsSet) {
 			for (int i = 1; i < list.size(); i++) {
-				Assert.assertEquals(
-						Unit.valueOf(list.get(0)).isCompatible(
-								Unit.valueOf(list.get(i))), true);
+				Assert.assertEquals(BillingUnits.valueOf(list.get(0))
+						.isCompatible(BillingUnits.valueOf(list.get(i))), true);
 			}
 		}
 	}
@@ -90,17 +85,17 @@ public class ComputationUtilTest {
 	@Test(enabled = true)
 	public void test_getBaseUnit() {
 		Assert.assertEquals(ComputationUtil.getBaseUnit("g"),
-				Unit.valueOf("kg"));
+				BillingUnits.valueOf("kg"));
 		Assert.assertEquals(ComputationUtil.getBaseUnit("liter"),
-				Unit.valueOf("L"));
+				BillingUnits.valueOf("L"));
 		Assert.assertEquals(ComputationUtil.getBaseUnit("inch"),
-				Unit.valueOf("in"));
+				BillingUnits.valueOf("in"));
 		Assert.assertEquals(ComputationUtil.getBaseUnit("dozen "),
-				Unit.valueOf("dz"));
+				BillingUnits.valueOf("dz"));
 		Assert.assertEquals(ComputationUtil.getBaseUnit("pcs"),
-				Unit.valueOf("dz"));
+				BillingUnits.valueOf("dz"));
 		Assert.assertEquals(ComputationUtil.getBaseUnit("packet"),
-				Unit.valueOf("dz"));
+				BillingUnits.valueOf("dz"));
 		Assert.assertNull(ComputationUtil.getBaseUnit("dozz "));
 	}
 

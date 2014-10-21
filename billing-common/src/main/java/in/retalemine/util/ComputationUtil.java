@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import in.retalemine.constants.BillingConstants;
+import in.retalemine.measure.unit.BillingUnits;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public class ComputationUtil {
 			return null;
 		}
 		String units[] = validUnits.toArray(new String[0]);
-		return Unit.valueOf(units[0]);
+		return BillingUnits.valueOf(units[0]);
 	}
 
 	public static Boolean isBaseUnit(String unit) {
@@ -203,12 +204,13 @@ public class ComputationUtil {
 			}
 			String unitY = quantityY.getUnit().toString();
 			if (!unitY.equals(unitX)) {
-				result = quantityY.to((Unit<Y>) Unit.valueOf(unitX));
+				result = quantityY.to((Unit<Y>) BillingUnits.valueOf(unitX));
 				if (formatter.format(result.getValue()).equals(
 						result.getValue().toString())) {
 					quantityY = (Measure<Double, Y>) result;
 				} else {
-					quantityX = quantityX.to((Unit<X>) Unit.valueOf(unitY));
+					quantityX = quantityX.to((Unit<X>) BillingUnits
+							.valueOf(unitY));
 				}
 			}
 			return Measure.valueOf(quantityX.getValue() + quantityY.getValue(),

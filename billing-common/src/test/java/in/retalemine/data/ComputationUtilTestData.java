@@ -4,7 +4,6 @@ import in.retalemine.measure.unit.BillingUnits;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Quantity;
-import javax.measure.unit.Unit;
 
 import org.jscience.physics.amount.Amount;
 import org.testng.annotations.BeforeClass;
@@ -14,7 +13,6 @@ public class ComputationUtilTestData {
 
 	@BeforeClass
 	public void setup() {
-		BillingUnits.getInstance();
 	}
 
 	@DataProvider(name = "netQuantityData")
@@ -138,7 +136,7 @@ public class ComputationUtilTestData {
 			value = 1.0;
 		}
 		String unit = data.replaceAll("[0-9.]", "");
-		return Measure.valueOf(value, Unit.valueOf(unit));
+		return Measure.valueOf(value, BillingUnits.valueOf(unit));
 	}
 
 	private static Object[][] constructSumUpData(String[][] validDatas,

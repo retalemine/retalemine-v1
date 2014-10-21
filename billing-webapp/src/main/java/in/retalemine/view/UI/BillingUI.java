@@ -1,6 +1,5 @@
 package in.retalemine.view.UI;
 
-import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.view.component.BillingCartBuilder;
 import in.retalemine.view.component.BillingFooterBuilder;
 import in.retalemine.view.component.BillingHeaderBuilder;
@@ -27,10 +26,6 @@ public class BillingUI extends UI {
 	private BillingCartBuilder billingCart;
 	private BillingTable billingTable;
 	private BillingFooterBuilder billingFooter;
-
-	static {
-		BillingUnits.getInstance();
-	}
 
 	@Override
 	protected void init(VaadinRequest request) {
