@@ -1,5 +1,6 @@
 package in.retalemine.view.component;
 
+import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.util.ComputationUtil;
 import in.retalemine.util.InputParser;
 import in.retalemine.view.constants.BillingConstants;
@@ -87,8 +88,7 @@ public class QuantityComboBox extends ComboBox {
 						if (null != (validUnit = ComputationUtil
 								.getValidUnit(quantitySplit[1]))
 								&& parsedQuantity > 0) {
-							newUnit = javax.measure.unit.Unit
-									.valueOf(validUnit);
+							newUnit = BillingUnits.valueOf(validUnit);
 							quantity = Measure.valueOf(parsedQuantity, newUnit);
 							addItem(quantity);
 							setValue(quantity);
@@ -144,8 +144,8 @@ public class QuantityComboBox extends ComboBox {
 		FormLayout mailLayout = new FormLayout();
 		final QuantityComponent qty = new QuantityComponent(
 				BillingConstants.BOX_LABEL_UNIT_QUANTITY,
-				String.valueOf(quantity), ComputationUtil.getValidUnitsGroup(unit
-						.toString()));
+				String.valueOf(quantity),
+				ComputationUtil.getValidUnitsGroup(unit.toString()));
 		Button submit = new Button(BillingConstants.BOX_LABEL_SUBMIT);
 
 		submit.setImmediate(true);

@@ -1,5 +1,6 @@
 package in.retalemine.view.component;
 
+import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.util.ComputationUtil;
 import in.retalemine.util.InputParser;
 import in.retalemine.view.VO.ProductVO;
@@ -72,8 +73,7 @@ public class ProductComboBox extends ComboBox {
 						result[2] = validUnit;
 						Measure<Double, ? extends Quantity> productUnit = Measure
 								.valueOf(Double.parseDouble(result[1]),
-										javax.measure.unit.Unit
-												.valueOf(result[2]));
+										BillingUnits.valueOf(result[2]));
 						String productDescription = result[0]
 								+ BillingConstants.PRODUCT_DESC_DIVIDER
 								+ productUnit;
