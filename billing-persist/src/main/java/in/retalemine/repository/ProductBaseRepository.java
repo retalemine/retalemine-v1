@@ -13,7 +13,7 @@ import com.mongodb.WriteResult;
 @NoRepositoryBean
 public interface ProductBaseRepository<T, ID extends Serializable> {
 
-	WriteResult upsert(Query query, Update update, Class<T> entityClass);
+	WriteResult upsert(T entity, Boolean resetRate);
 
 	WriteResult updateFirst(Query query, Update update, Class<?> entityClass);
 

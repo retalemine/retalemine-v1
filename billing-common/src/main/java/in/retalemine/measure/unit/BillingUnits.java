@@ -38,6 +38,7 @@ public final class BillingUnits extends SystemOfUnits {
 	static {
 		UnitFormat.getInstance().label(BillingUnits.DOZEN, "dz");
 		UnitFormat.getInstance().label(BillingUnits.PIECE, "pcs");
+		UnitFormat.getInstance().alias(INR, "₹");
 	}
 
 	@Override
