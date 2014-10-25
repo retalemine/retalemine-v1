@@ -21,8 +21,6 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 	@Autowired
 	private ProductRepository prodrepository;
 
-	private String id;
-
 	@BeforeClass
 	public void setup() {
 		prodrepository.deleteAll();
@@ -34,16 +32,25 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 		Assert.assertEquals(prodrepository.count(), 0);
 	}
 
-	@Test(enabled = false, dataProvider = "productSaveData", dataProviderClass = ProductRepositoryData.class)
+	@Test(enabled = true, dataProvider = "productSaveData", dataProviderClass = ProductRepositoryData.class)
 	public void test_save(Product<?> product) {
 		prodrepository.save(product);
-		id = product.getObjectId();
 	}
 
-	@Test(enabled = true, dependsOnMethods = { "test_deleteAll" }, dataProvider = "productUpsertData", dataProviderClass = ProductRepositoryData.class)
+	@Test(enabled = true, dataProvider = "productSaveData", dataProviderClass = ProductRepositoryData.class)
+	public void test_findOne(Product<?> expectedProduct) {
+		prodrepository.save(expectedProduct);
+		Product<?> actualProduct = prodrepository.findOne(expectedProduct
+				.getObjectId());
+		Assert.assertNotNull(actualProduct);
+		assertProduct(actualProduct, expectedProduct);
+	}
+
+	@Test(enabled = false, dependsOnMethods = { "test_deleteAll" }, dataProvider = "productUpsertData", dataProviderClass = ProductRepositoryData.class)
 	public <T extends Quantity> void test_upsert(Product<T> product,
-			List<Product<T>> productList, Boolean reset) {
+			List<Product<T>> expectedList, Boolean reset) {
 		prodrepository.upsert(product, reset);
+		List<Product<?>> actualList = prodrepository.findAll();
 	}
 
 	@Test(enabled = false)
@@ -54,11 +61,6 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 	public void test_findProductsByName() {
 	}
 
-	@Test(enabled = false, dependsOnMethods = { "test_save" })
-	public void test_findOne() {
-		prodrepository.findOne(id);
-	}
-
 	@Test(enabled = false, dependsOnMethods = { "test_save", "test_upsert" })
 	public void test_findAll() {
 		prodrepository.findAll();
@@ -66,6 +68,15 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 
 	@Test(enabled = false)
 	public void test_findByProductNameIgnoreCase() {
+	}
+
+	public void assertProduct(Product<?> actualObj, Product<?> expectedObj) {
+		Assert.assertEquals(actualObj.getProductName(),
+				expectedObj.getProductName());
+		Assert.assertEquals(actualObj.getProductUnit(),
+				expectedObj.getProductUnit());
+		Assert.assertEquals(actualObj.getUnitPrices(),
+				expectedObj.getUnitPrices());
 	}
 
 }
