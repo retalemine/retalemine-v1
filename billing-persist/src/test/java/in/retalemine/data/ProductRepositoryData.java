@@ -36,15 +36,17 @@ public class ProductRepositoryData {
 	@DataProvider(name = "productUpsertData")
 	public static Object[][] productUpsertData() {
 
-		Product<Volume> firstProduct, secondProduct, firstProductUpdated, firstProductReset;
+		final Product<Volume> firstProduct, secondProduct, firstProductUpdated, firstProductReset;
 		final Product<Volume> firstProductObj, secondProductObj, firstProductUpdatedObj, firstProductResetObj;
-		List<Product<Volume>> oneProductList, twoProductList, twoProductUpdatedList, twoProductResetList;
+		final List<Product<Volume>> oneProductList, twoProductList, twoProductUpdatedList, twoProductResetList;
+		List<Product<Volume>> actual;
+		List<List<Product<Volume>>> expected;
 		/** -- **/
 		String product = "Sunflower Oil";
+		Date date = new Date();
 		Measure<Double, Volume> liter = Measure.valueOf(1.0, NonSI.LITER);
 		final Amount<Money> firstRate = Amount.valueOf(155.0, BillingUnits.INR);
-		firstProduct = new Product<Volume>(product, liter, firstRate,
-				new Date());
+		firstProduct = new Product<Volume>(product, liter, firstRate, date);
 		Set<Amount<Money>> firstRateSet = new HashSet<Amount<Money>>() {
 			private static final long serialVersionUID = -1747204176656953536L;
 			{
@@ -52,7 +54,7 @@ public class ProductRepositoryData {
 			}
 		};
 		firstProductObj = new Product<Volume>(product, liter, firstRateSet,
-				new Date());
+				date);
 		oneProductList = new ArrayList<Product<Volume>>() {
 			private static final long serialVersionUID = -3247727786018672288L;
 			{
@@ -64,18 +66,19 @@ public class ProductRepositoryData {
 				SI.MILLI(NonSI.LITER));
 		final Amount<Money> secondRate = Amount.valueOf(80.0, BillingUnits.INR);
 		secondProduct = new Product<Volume>(product, milliLiter, secondRate,
-				new Date());
+				date);
 		Set<Amount<Money>> secondRateSet = new HashSet<Amount<Money>>() {
 			private static final long serialVersionUID = -2670194938302981528L;
 			{
 				add(secondRate);
 			}
 		};
-		secondProductObj = new Product<Volume>(product, liter, secondRateSet,
-				new Date());
+		secondProductObj = new Product<Volume>(product, milliLiter,
+				secondRateSet, date);
 		twoProductList = new ArrayList<Product<Volume>>() {
 			private static final long serialVersionUID = -2470829611245233328L;
 			{
+				add(firstProductObj);
 				add(secondProductObj);
 			}
 		};
@@ -83,7 +86,7 @@ public class ProductRepositoryData {
 		final Amount<Money> oneAnotherRate = Amount.valueOf(145.0,
 				BillingUnits.INR);
 		firstProductUpdated = new Product<Volume>(product, liter,
-				oneAnotherRate, new Date());
+				oneAnotherRate, date);
 		Set<Amount<Money>> oneAnotherRateSet = new HashSet<Amount<Money>>() {
 			private static final long serialVersionUID = 7591023670383873663L;
 			{
@@ -92,7 +95,7 @@ public class ProductRepositoryData {
 			}
 		};
 		firstProductUpdatedObj = new Product<Volume>(product, liter,
-				oneAnotherRateSet, new Date());
+				oneAnotherRateSet, date);
 		twoProductUpdatedList = new ArrayList<Product<Volume>>() {
 			private static final long serialVersionUID = 1510246908307676937L;
 			{
@@ -109,9 +112,9 @@ public class ProductRepositoryData {
 			}
 		};
 		firstProductReset = new Product<Volume>(product, liter, resetRateSet,
-				new Date());
+				date);
 		firstProductResetObj = new Product<Volume>(product, liter,
-				resetRateSet, new Date());
+				resetRateSet, date);
 		twoProductResetList = new ArrayList<Product<Volume>>() {
 			private static final long serialVersionUID = 7607809816720378150L;
 			{
@@ -120,9 +123,32 @@ public class ProductRepositoryData {
 			}
 		};
 
-		return new Object[][] { { firstProduct, oneProductList, false },
-				{ secondProduct, twoProductList, false },
-				{ firstProductUpdated, twoProductUpdatedList, false },
-				{ firstProductReset, twoProductResetList, true } };
+		actual = new ArrayList<Product<Volume>>(4) {
+			private static final long serialVersionUID = -1360069955475948541L;
+
+			{
+				add(firstProduct);
+				add(secondProduct);
+				add(firstProductUpdated);
+				add(firstProductReset);
+			}
+		};
+		expected = new ArrayList<List<Product<Volume>>>(4) {
+			private static final long serialVersionUID = -6383513906077841474L;
+
+			{
+				add(oneProductList);
+				add(twoProductList);
+				add(twoProductUpdatedList);
+				add(twoProductResetList);
+			}
+		};
+
+		// return new Object[][] { { firstProduct, oneProductList, false },
+		// { secondProduct, twoProductList, false },
+		// { firstProductUpdated, twoProductUpdatedList, false },
+		// { firstProductReset, twoProductResetList, true } };
+		return new Object[][] { { actual, new int[] { 0, 0, 0, 1 }, expected } };
 	}
+
 }

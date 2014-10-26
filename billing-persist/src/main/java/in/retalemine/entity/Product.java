@@ -1,5 +1,6 @@
 package in.retalemine.entity;
 
+import in.retalemine.constants.BillingConstants;
 import in.retalemine.constants.MongoDBKeys;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Product<Q extends Quantity> {
 
 	@Id
-	private String objectId;
+	private String productId;
 	@Field(MongoDBKeys.PRODUCT_NAME)
 	private String productName;
 	@Field(MongoDBKeys.PRODUCT_UNIT)
@@ -37,6 +38,8 @@ public class Product<Q extends Quantity> {
 
 	public Product(String productName, Measure<Double, Q> productUnit,
 			Set<Amount<Money>> unitPrices, Date createdOrModifiedDate) {
+		this.productId = productName + BillingConstants.PRODUCT_DESC_DIVIDER
+				+ productUnit;
 		this.productName = productName;
 		this.productUnit = productUnit;
 		this.unitPrices = unitPrices;
@@ -45,14 +48,16 @@ public class Product<Q extends Quantity> {
 
 	public Product(String productName, Measure<Double, Q> productUnit,
 			Amount<Money> unitPrice, Date createdOrModifiedDate) {
+		this.productId = productName + BillingConstants.PRODUCT_DESC_DIVIDER
+				+ productUnit;
 		this.productName = productName;
 		this.productUnit = productUnit;
 		this.unitPrice = unitPrice;
 		this.createdOrModifiedDate = createdOrModifiedDate;
 	}
 
-	public String getObjectId() {
-		return objectId;
+	public String getProductId() {
+		return productId;
 	}
 
 	public String getProductName() {
@@ -78,9 +83,9 @@ public class Product<Q extends Quantity> {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<Product><objectId>");
-		builder.append(objectId);
-		builder.append("</objectId><productName>");
+		builder.append("<Product><productId>");
+		builder.append(productId);
+		builder.append("</productId><productName>");
 		builder.append(productName);
 		builder.append("</productName><productUnit>");
 		builder.append(productUnit);

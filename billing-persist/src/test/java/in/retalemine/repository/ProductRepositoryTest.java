@@ -1,5 +1,11 @@
 package in.retalemine.repository;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import in.retalemine.constants.MongoDBKeys;
 import in.retalemine.data.ProductRepositoryData;
 import in.retalemine.entity.Product;
 
@@ -8,9 +14,13 @@ import java.util.List;
 import javax.measure.quantity.Quantity;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -29,54 +39,45 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 	@Test(enabled = true)
 	public void test_deleteAll() {
 		prodrepository.deleteAll();
-		Assert.assertEquals(prodrepository.count(), 0);
+		assertThat(prodrepository.count(), equalTo(0l));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test(enabled = true, dataProvider = "productSaveData", dataProviderClass = ProductRepositoryData.class)
-	public void test_save(Product<?> product) {
-		prodrepository.save(product);
-	}
-
-	@Test(enabled = true, dataProvider = "productSaveData", dataProviderClass = ProductRepositoryData.class)
-	public void test_findOne(Product<?> expectedProduct) {
+	public <T extends Quantity> void test_save_findOne(
+			Product<T> expectedProduct) {
 		prodrepository.save(expectedProduct);
-		Product<?> actualProduct = prodrepository.findOne(expectedProduct
-				.getObjectId());
-		Assert.assertNotNull(actualProduct);
-		assertProduct(actualProduct, expectedProduct);
+		Product<T> actualProduct = (Product<T>) prodrepository
+				.findOne(expectedProduct.getProductId());
+		assertThat(actualProduct, samePropertyValuesAs(expectedProduct));
 	}
 
-	@Test(enabled = false, dependsOnMethods = { "test_deleteAll" }, dataProvider = "productUpsertData", dataProviderClass = ProductRepositoryData.class)
-	public <T extends Quantity> void test_upsert(Product<T> product,
-			List<Product<T>> expectedList, Boolean reset) {
-		prodrepository.upsert(product, reset);
-		List<Product<?>> actualList = prodrepository.findAll();
+	@Test(enabled = true, dataProvider = "productUpsertData", dataProviderClass = ProductRepositoryData.class)
+	public void test_upsert(List<Product<?>> productList, int[] flags,
+			List<List<Product<?>>> resultSetList) {
+		int i = 0;
+		prodrepository.deleteAll();
+		for (Product<?> product : productList) {
+			prodrepository.upsert(product, 0 == flags[i] ? false : true);
+			List<Product<?>> actualList = prodrepository.findAll();
+			assertThat(actualList, hasSize(resultSetList.get(i).size()));
+			for (final Product<?> expected : resultSetList.get(i)) {
+				assertThat(actualList, hasItem(samePropertyValuesAs(expected)));
+			}
+			i++;
+		}
 	}
 
-	@Test(enabled = false)
-	public void test_updateFirst() {
-	}
-
-	@Test(enabled = false)
-	public void test_findProductsByName() {
-	}
-
-	@Test(enabled = false, dependsOnMethods = { "test_save", "test_upsert" })
+	@Test(enabled = true, dependsOnMethods = { "test_save_findOne",
+			"test_upsert" })
 	public void test_findAll() {
-		prodrepository.findAll();
-	}
-
-	@Test(enabled = false)
-	public void test_findByProductNameIgnoreCase() {
-	}
-
-	public void assertProduct(Product<?> actualObj, Product<?> expectedObj) {
-		Assert.assertEquals(actualObj.getProductName(),
-				expectedObj.getProductName());
-		Assert.assertEquals(actualObj.getProductUnit(),
-				expectedObj.getProductUnit());
-		Assert.assertEquals(actualObj.getUnitPrices(),
-				expectedObj.getUnitPrices());
+		Pageable pageable = new PageRequest(2, 1, new Sort(Direction.ASC,
+				MongoDBKeys.ID));
+		Page<Product<?>> productsPage = prodrepository.findAll(pageable);
+		if (productsPage.hasContent()) {
+			assertThat(productsPage.isFirstPage(), equalTo(false));
+			assertThat(productsPage.getContent().size(), equalTo(1));
+		}
 	}
 
 }
