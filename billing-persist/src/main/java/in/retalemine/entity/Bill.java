@@ -5,8 +5,6 @@ import in.retalemine.constants.MongoDBKeys;
 import java.util.Date;
 import java.util.List;
 
-import javax.measure.quantity.Quantity;
-
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.springframework.data.annotation.Id;
@@ -23,7 +21,7 @@ public class Bill {
 	@Field(MongoDBKeys.BILL_DATE)
 	private Date billDate;
 	@Field(MongoDBKeys.BILL_ITEMS)
-	private List<BillItem<? extends Quantity, ? extends Quantity>> billItems;
+	private List<BillItem> billItems;
 	@Transient
 	private Amount<Money> subTotal;
 	@Field(MongoDBKeys.BILL_TAX)
@@ -40,8 +38,7 @@ public class Bill {
 	public Bill() {
 	}
 
-	public Bill(Integer billNo, Date billDate,
-			List<BillItem<? extends Quantity, ? extends Quantity>> billItems,
+	public Bill(Integer billNo, Date billDate, List<BillItem> billItems,
 			Amount<Money> subTotal, List<Tax> taxes, Amount<Money> total,
 			Payment paymentDetails, Customer customerDetails,
 			Boolean isDoorDelivery) {

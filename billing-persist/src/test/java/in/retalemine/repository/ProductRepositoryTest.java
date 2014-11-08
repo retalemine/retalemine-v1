@@ -42,26 +42,24 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 		assertThat(prodrepository.count(), equalTo(0l));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test(enabled = true, dataProvider = "productSaveData", dataProviderClass = ProductRepositoryData.class)
-	public <T extends Quantity> void test_save_findOne(
-			Product<T> expectedProduct) {
+	public <T extends Quantity> void test_save_findOne(Product expectedProduct) {
 		prodrepository.save(expectedProduct);
-		Product<T> actualProduct = (Product<T>) prodrepository
+		Product actualProduct = (Product) prodrepository
 				.findOne(expectedProduct.getProductId());
 		assertThat(actualProduct, samePropertyValuesAs(expectedProduct));
 	}
 
 	@Test(enabled = true, dataProvider = "productUpsertData", dataProviderClass = ProductRepositoryData.class)
-	public void test_upsert(List<Product<?>> productList, int[] flags,
-			List<List<Product<?>>> resultSetList) {
+	public void test_upsert(List<Product> productList, int[] flags,
+			List<List<Product>> resultSetList) {
 		int i = 0;
 		prodrepository.deleteAll();
-		for (Product<?> product : productList) {
+		for (Product product : productList) {
 			prodrepository.upsert(product, 0 == flags[i] ? false : true);
-			List<Product<?>> actualList = prodrepository.findAll();
+			List<Product> actualList = prodrepository.findAll();
 			assertThat(actualList, hasSize(resultSetList.get(i).size()));
-			for (final Product<?> expected : resultSetList.get(i)) {
+			for (final Product expected : resultSetList.get(i)) {
 				assertThat(actualList, hasItem(samePropertyValuesAs(expected)));
 			}
 			i++;
@@ -73,7 +71,7 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 	public void test_findAll() {
 		Pageable pageable = new PageRequest(2, 1, new Sort(Direction.ASC,
 				MongoDBKeys.ID));
-		Page<Product<?>> productsPage = prodrepository.findAll(pageable);
+		Page<Product> productsPage = prodrepository.findAll(pageable);
 		if (productsPage.hasContent()) {
 			assertThat(productsPage.isFirstPage(), equalTo(false));
 			assertThat(productsPage.getContent().size(), equalTo(1));

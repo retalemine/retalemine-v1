@@ -12,13 +12,13 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.mongodb.WriteResult;
 
 public class ProductRepositoryImpl implements
-		ProductBaseRepository<Product<?>, String> {
+		ProductBaseRepository<Product, String> {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public WriteResult upsert(Product<?> entity, Boolean resetRate) {
+	public WriteResult upsert(Product entity, Boolean resetRate) {
 		Query query = new Query();
 		Update update = new Update();
 

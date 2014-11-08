@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.measure.Measure;
-import javax.measure.quantity.Quantity;
 
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
@@ -48,17 +47,16 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 
 	@DataProvider
 	public Object[][] billDataProvider() {
-		List<BillItem<? extends Quantity, ? extends Quantity>> bItems = new ArrayList<BillItem<? extends Quantity, ? extends Quantity>>();
+		List<BillItem> bItems = new ArrayList<BillItem>();
 
-		BillItem<?, ?> sugar = BillItem.valueOf("Sugar",
+		BillItem sugar = BillItem.valueOf("Sugar",
 				Measure.valueOf(1.0, KILOGRAM), "Sugar - 1kg",
 				Amount.valueOf(45.0, BillingUnits.INR),
 				Measure.valueOf(5.0, KILOGRAM),
 				Amount.valueOf(225.0, BillingUnits.INR));
 
-		BillItem<?, ?> oil = BillItem.valueOf("Oil",
-				Measure.valueOf(1.0, LITER), "Oil - 1L",
-				Amount.valueOf(150.0, BillingUnits.INR),
+		BillItem oil = BillItem.valueOf("Oil", Measure.valueOf(1.0, LITER),
+				"Oil - 1L", Amount.valueOf(150.0, BillingUnits.INR),
 				Measure.valueOf(500.0, MILLI(LITER)),
 				Amount.valueOf(75.0, BillingUnits.INR));
 

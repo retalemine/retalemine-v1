@@ -17,14 +17,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "products")
-public class Product<Q extends Quantity> {
+public class Product {
 
 	@Id
 	private String productId;
 	@Field(MongoDBKeys.PRODUCT_NAME)
 	private String productName;
 	@Field(MongoDBKeys.PRODUCT_UNIT)
-	private Measure<Double, Q> productUnit;
+	private Measure<Double, ? extends Quantity> productUnit;
 	@Transient()
 	private Amount<Money> unitPrice;
 	@Field(MongoDBKeys.PRODUCT_PRICES)
@@ -36,7 +36,8 @@ public class Product<Q extends Quantity> {
 
 	}
 
-	public Product(String productName, Measure<Double, Q> productUnit,
+	public Product(String productName,
+			Measure<Double, ? extends Quantity> productUnit,
 			Set<Amount<Money>> unitPrices, Date createdOrModifiedDate) {
 		this.productId = productName + BillingConstants.PRODUCT_DESC_DIVIDER
 				+ productUnit;
@@ -46,7 +47,8 @@ public class Product<Q extends Quantity> {
 		this.createdOrModifiedDate = createdOrModifiedDate;
 	}
 
-	public Product(String productName, Measure<Double, Q> productUnit,
+	public Product(String productName,
+			Measure<Double, ? extends Quantity> productUnit,
 			Amount<Money> unitPrice, Date createdOrModifiedDate) {
 		this.productId = productName + BillingConstants.PRODUCT_DESC_DIVIDER
 				+ productUnit;
@@ -64,7 +66,7 @@ public class Product<Q extends Quantity> {
 		return productName;
 	}
 
-	public Measure<Double, Q> getProductUnit() {
+	public Measure<Double, ? extends Quantity> getProductUnit() {
 		return productUnit;
 	}
 
