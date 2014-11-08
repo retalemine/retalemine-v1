@@ -1,6 +1,7 @@
 package in.retalemine.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -78,4 +79,24 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 		}
 	}
 
+	/**
+	 * Not Working
+	 */
+	@Test(enabled = false, dependsOnMethods = { "test_save_findOne",
+			"test_upsert" })
+	public void test_findByProductIdRegex() {
+		for (String productRegEx : new String[] { "S", "su", "sun", "sunflower" }) {
+			Pageable pageable = new PageRequest(1, 5, new Sort(Direction.ASC,
+					MongoDBKeys.ID));
+			Page<Product> productsPage = prodrepository.findByProductIdRegex(
+					"/^" + productRegEx + "/i", pageable);
+			if (productsPage.hasContent()) {
+				assertThat(productsPage.isFirstPage(), equalTo(true));
+				for (Product product : productsPage.getContent()) {
+					assertThat(product.getProductId(),
+							containsString("Sunflower"));
+				}
+			}
+		}
+	}
 }
