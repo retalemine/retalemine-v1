@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Bill {
 
 	@Id
-	@Field(MongoDBKeys.BILL_NO)
 	private Integer billNo;
 	@Field(MongoDBKeys.BILL_DATE)
 	private Date billDate;

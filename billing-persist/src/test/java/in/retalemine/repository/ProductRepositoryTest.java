@@ -35,11 +35,6 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 	@BeforeClass
 	public void setup() {
 		prodrepository.deleteAll();
-	}
-
-	@Test(enabled = false)
-	public void test_deleteAll() {
-		prodrepository.deleteAll();
 		assertThat(prodrepository.count(), equalTo(0l));
 	}
 

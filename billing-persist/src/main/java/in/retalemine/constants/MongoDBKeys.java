@@ -8,7 +8,6 @@ public interface MongoDBKeys {
 	public static final String BILL_PAYMENT_DATE = "date";
 	public static final String VALUE = "value";
 	public static final String UNIT = "unit";
-	public static final String BILL_NO = "bNo";
 	public static final String BILL_DATE = "bDate";
 	public static final String BILL_ITEMS = "bItems";
 	public static final String BILL_TAX = "tax";
