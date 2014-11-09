@@ -10,7 +10,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface FeaturedRepository<T, ID extends Serializable> extends
 		MongoRepository<T, ID> {
 
-	void insert(T entity);
-
 	T findOne(Query query, Class<T> entityClass);
+
 }

@@ -16,11 +16,6 @@ public class FeaturedRepositoryImpl<T, ID extends Serializable> extends
 	}
 
 	@Override
-	public void insert(T entity) {
-		this.getMongoOperations().insert(entity);
-	}
-
-	@Override
 	public T findOne(Query query, Class<T> entityClass) {
 		return this.getMongoOperations().findOne(query, entityClass);
 	}
