@@ -3,10 +3,17 @@ package in.retalemine.repository;
 import in.retalemine.constants.MongoDBKeys;
 import in.retalemine.entity.Product;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.mongodb.WriteResult;
@@ -41,4 +48,13 @@ public class ProductRepositoryImpl implements
 		return mongoTemplate.upsert(query, update, entity.getClass());
 	}
 
+	@Override
+	public Page<Product> searchProducts(String searchText, Pageable pageable) {
+		Query query = TextQuery.queryText(new TextCriteria()
+				.matching(searchText));
+		Long count = mongoTemplate.count(query, Product.class);
+		List<Product> list = mongoTemplate.find(query.with(pageable),
+				Product.class);
+		return new PageImpl<Product>(list, pageable, count);
+	}
 }

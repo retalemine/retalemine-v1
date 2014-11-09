@@ -74,7 +74,7 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 				MongoDBKeys.ID));
 		Page<Product> productsPage = prodrepository.findAll(pageable);
 		if (productsPage.hasContent()) {
-			assertThat(productsPage.isFirstPage(), equalTo(true));
+			assertThat(productsPage.isFirst(), equalTo(true));
 			assertThat(productsPage.getContent().size(), equalTo(1));
 		}
 	}
@@ -89,7 +89,24 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 			Page<Product> productsPage = prodrepository.findByProductIdRegex(
 					productRegEx, pageable);
 			if (productsPage.hasContent()) {
-				assertThat(productsPage.isFirstPage(), equalTo(true));
+				assertThat(productsPage.isFirst(), equalTo(true));
+				assertThat(productsPage.getSize(), lessThanOrEqualTo(count));
+				count = productsPage.getSize();
+			}
+		}
+	}
+
+	@Test(enabled = true, dependsOnMethods = { "test_save_findOne",
+			"test_upsert" })
+	public void test_searchProducts() {
+		int count = 5;
+		for (String productRegEx : new String[] { "S", "su", "sun", "sunflower" }) {
+			Pageable pageable = new PageRequest(0, 5, new Sort(Direction.ASC,
+					MongoDBKeys.ID));
+			Page<Product> productsPage = prodrepository.searchProducts(
+					productRegEx, pageable);
+			if (productsPage.hasContent()) {
+				assertThat(productsPage.isFirst(), equalTo(true));
 				assertThat(productsPage.getSize(), lessThanOrEqualTo(count));
 				count = productsPage.getSize();
 			}
