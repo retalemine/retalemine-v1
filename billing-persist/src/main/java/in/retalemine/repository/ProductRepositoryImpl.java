@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -50,11 +51,20 @@ public class ProductRepositoryImpl implements
 
 	@Override
 	public Page<Product> searchProducts(String searchText, Pageable pageable) {
-		Query query = TextQuery.queryText(new TextCriteria()
-				.matching(searchText));
-		Long count = mongoTemplate.count(query, Product.class);
-		List<Product> list = mongoTemplate.find(query.with(pageable),
-				Product.class);
+		Query query = null;
+		Long count = 0l;
+		List<Product> list = null;
+		try {
+			query = TextQuery
+					.queryText(new TextCriteria().matching(searchText));
+			count = mongoTemplate.count(query, Product.class);
+			list = mongoTemplate.find(query.with(pageable), Product.class);
+		} catch (UncategorizedMongoDbException e) {
+			query = new Query().addCriteria(Criteria.where(MongoDBKeys.ID)
+					.regex(searchText, "i"));
+			count = mongoTemplate.count(query, Product.class);
+			list = mongoTemplate.find(query.with(pageable), Product.class);
+		}
 		return new PageImpl<Product>(list, pageable, count);
 	}
 }

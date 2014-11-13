@@ -9,6 +9,7 @@ import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,7 +17,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Bill {
 
 	@Id
-	private Integer billNo;
+	private String id;
+	@Indexed(unique = true)
+	@Field(MongoDBKeys.BILL_NO)
+	private String billNo;
 	@Field(MongoDBKeys.BILL_DATE)
 	private Date billDate;
 	@Field(MongoDBKeys.BILL_ITEMS)
@@ -37,11 +41,10 @@ public class Bill {
 	public Bill() {
 	}
 
-	public Bill(Integer billNo, Date billDate, List<BillItem> billItems,
+	public Bill(Date billDate, List<BillItem> billItems,
 			Amount<Money> subTotal, List<Tax> taxes, Amount<Money> total,
 			Payment paymentDetails, Customer customerDetails,
 			Boolean isDoorDelivery) {
-		this.billNo = billNo;
 		this.billDate = billDate;
 		this.billItems = billItems;
 		this.subTotal = subTotal;
@@ -51,4 +54,17 @@ public class Bill {
 		this.customerDetails = customerDetails;
 		this.isDoorDelivery = isDoorDelivery;
 	}
+
+	public String getBillNo() {
+		return billNo;
+	}
+
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
+	}
+
+	public String getId() {
+		return id;
+	}
+
 }

@@ -49,8 +49,8 @@ public class BillRepositoryData {
 		Payment payment = new Payment(PaymentMode.CASH, false, true, new Date());
 		Customer customer = new Customer("User", 9934, "first street");
 
-		Bill bill = new Bill(1, new Date(), bItems, subTotal,
-				Arrays.asList(tax), totalAmount, payment, customer, false);
+		Bill bill = new Bill(new Date(), bItems, subTotal, Arrays.asList(tax),
+				totalAmount, payment, customer, false);
 
 		return new Object[][] { { bill } };
 	}
