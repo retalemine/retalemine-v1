@@ -9,11 +9,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 public class BillRepositoryImpl implements BillBaseRepository<Bill, Integer> {
 
-	@Autowired
-	MongoTemplate mongoTemplate;
-
 	@Override
-	public Bill insert(Bill entity) {
+	public Bill insert(Bill entity, MongoTemplate mongoTemplate) {
 
 		boolean saveFlag = false;
 		int MAX_RETRY = 10;

@@ -100,8 +100,7 @@ public class CustomerForm extends FormLayout {
 				|| null != customerAddress) {
 			if (null != customerNumber) {
 				return new CustomerVO((String) customerName,
-						Integer.parseInt((String) customerNumber),
-						(String) customerAddress);
+						(String) customerNumber, (String) customerAddress);
 			} else {
 				return new CustomerVO((String) customerName, null,
 						(String) customerAddress);

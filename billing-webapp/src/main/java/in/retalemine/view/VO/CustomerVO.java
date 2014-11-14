@@ -3,10 +3,10 @@ package in.retalemine.view.VO;
 public class CustomerVO {
 
 	private String customerName;
-	private Integer contactNo;
+	private String contactNo;
 	private String address;
 
-	public CustomerVO(String customerName, Integer customerNumber,
+	public CustomerVO(String customerName, String customerNumber,
 			String customerAddress) {
 		this.customerName = customerName;
 		contactNo = customerNumber;
@@ -21,11 +21,11 @@ public class CustomerVO {
 		this.customerName = customerName;
 	}
 
-	public Integer getContactNo() {
+	public String getContactNo() {
 		return contactNo;
 	}
 
-	public void setContactNo(Integer contactNo) {
+	public void setContactNo(String contactNo) {
 		this.contactNo = contactNo;
 	}
 

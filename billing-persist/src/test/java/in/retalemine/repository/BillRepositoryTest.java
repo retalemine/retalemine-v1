@@ -5,6 +5,7 @@ import in.retalemine.entity.Bill;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,6 +22,8 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 	private BillRepository billrepository;
 	@Autowired
 	private MongoConverter mongoConverter;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	@BeforeClass
 	public void setup() {
@@ -29,7 +32,7 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 
 	@Test(enabled = true, dataProvider = "billInsertSaveData", dataProviderClass = BillRepositoryData.class)
 	public void test_insert_save(Bill bill) {
-		billrepository.insert(bill);
+		billrepository.insert(bill, mongoTemplate);
 		billrepository.save(bill);
 		mongoConverter.convertToMongoType(bill);
 	}
@@ -38,7 +41,7 @@ public class BillRepositoryTest extends AbstractTestNGSpringContextTests {
 	public void test_findOne_insertDuplicate() {
 		Bill fetchBill = billrepository.findOne(new Query(), Bill.class);
 		Assert.assertNotNull(fetchBill, "Sales Collection is empty");
-		billrepository.insert(fetchBill);
+		billrepository.insert(fetchBill, mongoTemplate);
 	}
 
 }

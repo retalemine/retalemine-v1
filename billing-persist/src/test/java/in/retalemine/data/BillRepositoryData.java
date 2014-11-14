@@ -47,7 +47,7 @@ public class BillRepositoryData {
 		Tax tax = new Tax(TaxType.VAT, 4.0);
 		Amount<Money> totalAmount = Amount.valueOf(312.0, BillingUnits.INR);
 		Payment payment = new Payment(PaymentMode.CASH, false, true, new Date());
-		Customer customer = new Customer("User", 9934, "first street");
+		Customer customer = new Customer("User", "9934454578", "first street");
 
 		Bill bill = new Bill(new Date(), bItems, subTotal, Arrays.asList(tax),
 				totalAmount, payment, customer, false);

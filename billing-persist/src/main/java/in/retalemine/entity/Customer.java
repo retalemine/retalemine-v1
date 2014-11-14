@@ -9,11 +9,11 @@ public class Customer {
 	@Field(MongoDBKeys.CUSTOMER_NAME)
 	private String customerName;
 	@Field(MongoDBKeys.CUSTOMER_CONTACT_NO)
-	private Integer contactNo;
+	private String contactNo;
 	@Field(MongoDBKeys.CUSTOMER_ADDRESS)
 	private String address;
 
-	public Customer(String customerName, Integer contactNo, String address) {
+	public Customer(String customerName, String contactNo, String address) {
 		this.customerName = customerName;
 		this.contactNo = contactNo;
 		this.address = address;

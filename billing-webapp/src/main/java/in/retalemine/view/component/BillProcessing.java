@@ -1,7 +1,11 @@
 package in.retalemine.view.component;
 
+import in.retalemine.entity.Bill;
 import in.retalemine.measure.unit.BillingUnits;
+import in.retalemine.repository.BillRepository;
+import in.retalemine.util.ApplicationContextProvider;
 import in.retalemine.util.BillingComputationUtil;
+import in.retalemine.util.VOConverterUtil;
 import in.retalemine.view.VO.BillVO;
 import in.retalemine.view.VO.PaymentMode;
 import in.retalemine.view.VO.TaxVO;
@@ -19,6 +23,9 @@ import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -52,6 +59,9 @@ public class BillProcessing extends HorizontalLayout {
 	private Button resetBill;
 	private Button draftBill;
 	private Button printBill;
+
+	private BillRepository billRepository;
+	private MongoTemplate mongoTemplate;
 
 	public BillProcessing(final EventBus eventBus,
 			final PropertysetItem propertysetItem) {
@@ -132,6 +142,12 @@ public class BillProcessing extends HorizontalLayout {
 		addComponent(resetBill);
 		addComponent(draftBill);
 		addComponent(printBill);
+
+		billRepository = (BillRepository) ApplicationContextProvider
+				.getApplicationContext().getBean("billRepository");
+
+		mongoTemplate = (MongoTemplate) ApplicationContextProvider
+				.getApplicationContext().getBean("mongoTemplate");
 
 	}
 
@@ -265,9 +281,13 @@ public class BillProcessing extends HorizontalLayout {
 				// TODO keep the modal with progress bar depicting save and
 				// print
 				// TODO call the reset event on successful save and print
+				Bill bill = VOConverterUtil.constructBillObject(billVO);
+				bill = billRepository.insert(bill, mongoTemplate);
 				logger.info("BillVO {}", billVO);
 				logger.info("{} posts ResetBillingEvent", getClass()
 						.getSimpleName());
+				Notification.show(bill.getBillNo(), "Bill Saved Successfully",
+						Type.TRAY_NOTIFICATION);
 				eventBus.post(new ResetBillingEvent());
 				cashWindow.close();
 			}

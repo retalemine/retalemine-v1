@@ -13,4 +13,16 @@ public enum TaxType {
 		return value;
 	}
 
+	public static TaxType getTaxType(String value) {
+		if (null != value && !value.trim().isEmpty()) {
+			value = value.trim();
+			for (TaxType mode : TaxType.values()) {
+				if (mode.value.equalsIgnoreCase(value)) {
+					return mode;
+				}
+			}
+		}
+		return null;
+	}
+
 }
