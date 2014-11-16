@@ -127,6 +127,12 @@ public class ComputationUtilTestData {
 		return constructAmountData(inValidDatas, 3);
 	}
 
+	@DataProvider(name = "amountTextData")
+	public static Object[][] amountTextData() {
+		return new Object[][] { { "100 INR", 100.00 }, { "100.50 INR", 100.5 },
+				{ "125.75 USD", 125.75 } };
+	}
+
 	private static Measure<Double, ? extends Quantity> computeQuantityMeasure(
 			String data) {
 		Double value;

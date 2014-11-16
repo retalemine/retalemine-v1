@@ -36,16 +36,16 @@ public class BillRepositoryData {
 				Amount.valueOf(225.0, BillingUnits.INR));
 
 		BillItem oil = BillItem.valueOf("Oil", Measure.valueOf(1.0, LITER),
-				"Oil - 1L", Amount.valueOf(150.0, BillingUnits.INR),
+				"Oil - 1L", Amount.valueOf(140.0, BillingUnits.INR),
 				Measure.valueOf(500.0, MILLI(LITER)),
-				Amount.valueOf(75.0, BillingUnits.INR));
+				Amount.valueOf(70.0, BillingUnits.INR));
 
 		bItems.add(sugar);
 		bItems.add(oil);
 
-		Amount<Money> subTotal = Amount.valueOf(300.0, BillingUnits.INR);
+		Amount<Money> subTotal = Amount.valueOf(295.0, BillingUnits.INR);
 		Tax tax = new Tax(TaxType.VAT, 4.0);
-		Amount<Money> totalAmount = Amount.valueOf(312.0, BillingUnits.INR);
+		Amount<Money> totalAmount = Amount.valueOf(306.8, BillingUnits.INR);
 		Payment payment = new Payment(PaymentMode.CASH, false, true, new Date());
 		Customer customer = new Customer("User", "9934454578", "first street");
 

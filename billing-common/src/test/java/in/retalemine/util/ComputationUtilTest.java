@@ -11,6 +11,8 @@ import javax.measure.Measure;
 import javax.measure.converter.ConversionException;
 import javax.measure.quantity.Quantity;
 
+import javolution.text.Text;
+
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.testng.Assert;
@@ -133,5 +135,11 @@ public class ComputationUtilTest {
 			Amount<Money> unitRate,
 			Measure<Double, ? extends Quantity> netQuantity) {
 		ComputationUtil.computeAmount(unitQuantity, unitRate, netQuantity);
+	}
+
+	@Test(enabled = true, dataProvider = "amountTextData", dataProviderClass = ComputationUtilTestData.class)
+	public void test_computeClearAmount(String input, Double result) {
+		Assert.assertEquals(
+				ComputationUtil.computeClearAmount(new Text(input)), result);
 	}
 }

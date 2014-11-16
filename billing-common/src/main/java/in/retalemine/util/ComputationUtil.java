@@ -17,6 +17,8 @@ import javax.measure.Measure;
 import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
 
+import javolution.text.Text;
+
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.slf4j.Logger;
@@ -224,5 +226,10 @@ public class ComputationUtil {
 			Measure<Double, V> netQuantity) {
 		return unitRate.times(netQuantity.to((Unit<V>) unitQuantity.getUnit())
 				.getValue() / unitQuantity.getValue());
+	}
+
+	public static Double computeClearAmount(Text amount) {
+		String values[] = String.valueOf(amount).split("\\s");
+		return Double.parseDouble(values[0]);
 	}
 }
