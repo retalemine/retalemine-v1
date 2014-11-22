@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.Property;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
@@ -50,29 +51,33 @@ public class RateComboBox extends ComboBox {
 
 			private static final long serialVersionUID = -7267527387724023614L;
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void addNewItem(String newRate) {
 				logger.info("{} addNewItem starts", getClass().getSimpleName());
 				Amount<Money> rate = null;
-				try {
-					rate = Amount.valueOf(Double.parseDouble(newRate.trim()),
-							BillingUnits.INR);
-				} catch (NumberFormatException e) {
-					rate = (Amount<Money>) Amount.valueOf(newRate);
+				String value, unit;
+				value = newRate.replaceAll("[^\\d.]", "");
+				unit = newRate.replaceAll("[\\d.\\s]", "");
+				if (unit.isEmpty()
+						|| unit.equalsIgnoreCase(BillingUnits.INR.toString())) {
+					try {
+						rate = Amount.valueOf(Double.parseDouble(value),
+								BillingUnits.INR);
+					} catch (NumberFormatException e) {
+					}
 				}
-				if (null == rate) {
-					// TODO handle invalid rate
-					Notification.show("Invalid Rate", newRate,
-							Type.TRAY_NOTIFICATION);
-					setValue(null);
-					focus();
-				} else {
+
+				if (null != rate && IsValidateRate(rate)) {
 					if (!container.containsId(rate)) {
 						container.addItem(rate);
 						isNew = true;
 					}
 					setValue(rate);
+				} else {
+					Notification.show("Invalid Rate", newRate,
+							Type.TRAY_NOTIFICATION);
+					setValue(null);
+					focus();
 				}
 				logger.info("{} addNewItem ends", getClass().getSimpleName());
 			}
@@ -146,5 +151,13 @@ public class RateComboBox extends ComboBox {
 		logger.info("Event - {} : handler - {}", event.getClass()
 				.getSimpleName(), getClass().getSimpleName());
 		resetRateComboBox();
+	}
+
+	public Boolean IsValidateRate(Amount<Money> value)
+			throws InvalidValueException {
+		if (value.getEstimatedValue() >= 0 && value.getEstimatedValue() < 10000) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
 	<mongo:db-factory id="mongoDbFactory" host="127.0.0.1"
-		port="27017" dbname="retalemine" username="" password="" />
+		port="27017" dbname="versionone" username="" password="" />
 
 	<mongo:mapping-converter base-package="in.retalemine.converters">
 		<mongo:custom-converters>
