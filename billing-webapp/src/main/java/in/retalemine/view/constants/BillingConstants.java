@@ -58,6 +58,7 @@ public interface BillingConstants {
 
 	public static final String CASH_PAYMENT = "Cash Payment";
 	public static final String BILLABLE_AMT = "Billable Amount";
+	public static final String ROUNDED_AMT = "Rounded Amount";
 	public static final String RECEIVED_AMT = "Received Amount";
 	public static final String PAYBACK_AMT = "Payback Amount";
 

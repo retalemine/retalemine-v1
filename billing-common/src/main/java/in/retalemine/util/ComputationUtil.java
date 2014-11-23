@@ -232,4 +232,14 @@ public class ComputationUtil {
 		String values[] = String.valueOf(amount).split("\\s");
 		return Double.parseDouble(values[0]);
 	}
+
+	public static Boolean isEmpty(Object obj) {
+		if (null == obj) {
+			return true;
+		}
+		if (obj instanceof String && ((String) obj).trim().length() == 0) {
+			return true;
+		}
+		return false;
+	}
 }

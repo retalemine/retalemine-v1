@@ -77,7 +77,6 @@ public class CustomerForm extends FormLayout {
 
 	public void mandateCustomerDetails(boolean isRequired) {
 		customerName.setRequired(isRequired);
-		contactNumber.setRequired(isRequired);
 		addressLines.setRequired(isRequired);
 	}
 

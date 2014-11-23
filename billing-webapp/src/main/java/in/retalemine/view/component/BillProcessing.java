@@ -5,6 +5,7 @@ import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.repository.BillRepository;
 import in.retalemine.util.ApplicationContextProvider;
 import in.retalemine.util.BillingComputationUtil;
+import in.retalemine.util.ComputationUtil;
 import in.retalemine.util.VOConverterUtil;
 import in.retalemine.view.VO.BillVO;
 import in.retalemine.view.VO.PaymentMode;
@@ -23,8 +24,6 @@ import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.google.common.eventbus.EventBus;
@@ -128,6 +127,15 @@ public class BillProcessing extends HorizontalLayout {
 						billVO.getSubTotal(), billVO.getTaxes()));
 				billVO.setCustomerInfo(CustomerForm
 						.buildCustomerVO(propertysetItem));
+				if (billVO.getIsDoorDelivery()
+						&& (null == billVO.getCustomerInfo() || ComputationUtil
+								.isEmpty(billVO.getCustomerInfo().getAddress()))) {
+					Notification.show(
+							"Customer Details Needed For Home Delivery",
+							"Customer Name and Address is mandatory",
+							Type.TRAY_NOTIFICATION);
+					return;
+				}
 				if (PaymentMode.CASH.equals(billVO.getPayMode())) {
 					payCashModel(eventBus, billVO);
 				} else if (PaymentMode.CHEQUE.equals(billVO.getPayMode())) {
@@ -205,6 +213,7 @@ public class BillProcessing extends HorizontalLayout {
 		final Window cashWindow = new Window(BillingConstants.CASH_PAYMENT);
 		final FormLayout cashForm = new FormLayout();
 		final TextField billAmt = new TextField();
+		final TextField roundedBillAmt = new TextField();
 		final TextField receivedAmt = new TextField();
 		final TextField payBackAmt = new TextField();
 		final HorizontalLayout footerHL = new HorizontalLayout();
@@ -217,6 +226,17 @@ public class BillProcessing extends HorizontalLayout {
 		billAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(billVO
 				.getTotal()));
 		billAmt.setReadOnly(true);
+
+		roundedBillAmt.setCaption(BillingConstants.ROUNDED_AMT);
+		roundedBillAmt.setWidth("100%");
+		roundedBillAmt.setStyleName("v-textfield-align-right");
+		roundedBillAmt.setConverter(new AmountConverter());
+		roundedBillAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
+				Amount.valueOf(
+						billVO.getTotal()
+								.longValue(billVO.getTotal().getUnit()), billVO
+								.getTotal().getUnit())));
+		roundedBillAmt.setReadOnly(true);
 
 		receivedAmt.setCaption(BillingConstants.RECEIVED_AMT);
 		receivedAmt.setWidth("100%");
@@ -243,14 +263,20 @@ public class BillProcessing extends HorizontalLayout {
 			public void valueChange(Property.ValueChangeEvent event) {
 				if (null != event.getProperty().getValue()
 						&& !((String) event.getProperty().getValue()).isEmpty()) {
-					payBackAmt
-							.getPropertyDataSource()
-							.setValue(
-									((Amount<Money>) receivedAmt
-											.getPropertyDataSource().getValue())
-											.minus((Amount<Money>) billAmt
-													.getPropertyDataSource()
-													.getValue()));
+					Amount<Money> receivedMoney = (Amount<Money>) receivedAmt
+							.getPropertyDataSource().getValue();
+					Amount<Money> roundedMoney = (Amount<Money>) roundedBillAmt
+							.getPropertyDataSource().getValue();
+					if (-1 != receivedMoney.compareTo(roundedMoney)) {
+						payBackAmt.getPropertyDataSource().setValue(
+								receivedMoney.minus(roundedMoney));
+						printBill.setEnabled(true);
+					} else {
+						Notification.show("Cash not enough!",
+								receivedMoney.toString(),
+								Type.TRAY_NOTIFICATION);
+						printBill.setEnabled(false);
+					}
 				}
 
 			}
@@ -267,6 +293,7 @@ public class BillProcessing extends HorizontalLayout {
 		printBill.setCaption(BillingConstants.PRINT);
 		printBill.setSizeUndefined();
 		printBill.setImmediate(true);
+		printBill.setEnabled(false);
 		printBill.addClickListener(new ClickListener() {
 
 			private static final long serialVersionUID = -779726628843991503L;
@@ -301,6 +328,7 @@ public class BillProcessing extends HorizontalLayout {
 		footerHL.setSpacing(true);
 
 		cashForm.addComponent(billAmt);
+		cashForm.addComponent(roundedBillAmt);
 		cashForm.addComponent(receivedAmt);
 		cashForm.addComponent(payBackAmt);
 		cashForm.addComponent(footerHL);
