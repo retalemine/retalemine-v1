@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeClass;
@@ -31,6 +32,8 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 
 	@Autowired
 	private ProductRepository prodrepository;
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
 	@BeforeClass
 	public void setup() {
@@ -52,7 +55,8 @@ public class ProductRepositoryTest extends AbstractTestNGSpringContextTests {
 		int i = 0;
 		prodrepository.deleteAll();
 		for (Product product : productList) {
-			prodrepository.upsert(product, 0 == flags[i] ? false : true);
+			prodrepository.upsert(product, 0 == flags[i] ? false : true,
+					mongoTemplate);
 			List<Product> actualList = prodrepository.findAll();
 			assertThat(actualList, hasSize(resultSetList.get(i).size()));
 			for (final Product expected : resultSetList.get(i)) {
