@@ -26,7 +26,8 @@ public class ProductRepositoryImpl implements
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public WriteResult upsert(Product entity, Boolean resetRate) {
+	public WriteResult upsert(Product entity, Boolean resetRate,
+			MongoTemplate mongoTemplate) {
 		Query query = new Query();
 		Update update = new Update();
 

@@ -10,11 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 @Theme("retaletheme")
+@Title("Retalemine Billing Solutions")
 public class BillingUI extends UI {
 
 	private static final long serialVersionUID = -4411379836207492227L;

@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import com.mongodb.WriteResult;
@@ -13,7 +14,7 @@ import com.mongodb.WriteResult;
 @NoRepositoryBean
 public interface ProductBaseRepository<T, ID extends Serializable> {
 
-	WriteResult upsert(T entity, Boolean resetRate);
+	WriteResult upsert(T entity, Boolean resetRate, MongoTemplate mongoTemplate);
 
 	/**
 	 * Search text should be words like 'Sugar' and won't look up words

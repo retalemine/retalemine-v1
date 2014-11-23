@@ -4,12 +4,14 @@ import in.retalemine.entity.Bill;
 import in.retalemine.entity.BillItem;
 import in.retalemine.entity.Customer;
 import in.retalemine.entity.Payment;
+import in.retalemine.entity.Product;
 import in.retalemine.entity.Tax;
 import in.retalemine.entity.TaxType;
 import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.VO.BillVO;
 import in.retalemine.view.VO.CustomerVO;
 import in.retalemine.view.VO.PaymentMode;
+import in.retalemine.view.VO.ProductVO;
 import in.retalemine.view.VO.TaxVO;
 
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.measure.quantity.Quantity;
+
+import org.jscience.economics.money.Money;
+import org.jscience.physics.amount.Amount;
 
 public class VOConverterUtil {
 
@@ -75,5 +80,17 @@ public class VOConverterUtil {
 					billItemVO.getNetQuantity(), billItemVO.getAmount()));
 		}
 		return billItemsObj;
+	}
+
+	public static Product constructProductObject(
+			ProductVO<? extends Quantity> productVO, Amount<Money> newUnitRate) {
+		if (null != newUnitRate) {
+			return new Product(productVO.getProductName(),
+					productVO.getProductUnit(), newUnitRate, new Date());
+		} else {
+			return new Product(productVO.getProductName(),
+					productVO.getProductUnit(), productVO.getUnitRates(),
+					new Date());
+		}
 	}
 }

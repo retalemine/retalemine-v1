@@ -1,5 +1,9 @@
 package in.retalemine.view.component;
 
+import in.retalemine.entity.Product;
+import in.retalemine.repository.ProductRepository;
+import in.retalemine.util.ApplicationContextProvider;
+import in.retalemine.util.VOConverterUtil;
 import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.VO.ProductVO;
 import in.retalemine.view.constants.BillingConstants;
@@ -17,6 +21,7 @@ import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -31,6 +36,9 @@ public class CartButton extends Button {
 	private Amount<Money> unitRate;
 	private Measure<Double, ? extends Quantity> netQuantity;
 	private BillItemVO<? extends Quantity, ? extends Quantity> billItemVO;
+
+	private ProductRepository productRepository;
+	private MongoTemplate mongoTemplate;
 
 	public CartButton(final EventBus eventBus) {
 
@@ -59,6 +67,13 @@ public class CartButton extends Button {
 				resetCartButton();
 			}
 		});
+
+		productRepository = (ProductRepository) ApplicationContextProvider
+				.getApplicationContext().getBean("productRepository");
+
+		mongoTemplate = (MongoTemplate) ApplicationContextProvider
+				.getApplicationContext().getBean("mongoTemplate");
+
 	}
 
 	private void resetCartButton() {
@@ -86,6 +101,9 @@ public class CartButton extends Button {
 		if (event.getIsNew()) {
 			productVO.getUnitRates().add(event.getUnitRate());
 			// TODO New/Old product with new rate get pushed to DB (Async)
+			Product product = VOConverterUtil.constructProductObject(productVO,
+					event.getUnitRate());
+			productRepository.upsert(product, false, mongoTemplate);
 		}
 		unitRate = event.getUnitRate();
 	}
