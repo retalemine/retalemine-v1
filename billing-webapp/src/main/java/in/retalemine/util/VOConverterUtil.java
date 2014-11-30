@@ -22,6 +22,7 @@ import javax.measure.quantity.Quantity;
 
 import org.jscience.economics.money.Money;
 import org.jscience.physics.amount.Amount;
+import org.springframework.data.domain.Page;
 
 public class VOConverterUtil {
 
@@ -92,5 +93,16 @@ public class VOConverterUtil {
 					productVO.getProductUnit(), productVO.getUnitRates(),
 					new Date());
 		}
+	}
+
+	public static List<ProductVO<? extends Quantity>> constructProductVOObjects(
+			Page<Product> productPage) {
+		List<ProductVO<? extends Quantity>> products = new ArrayList<ProductVO<? extends Quantity>>(
+				productPage.getSize());
+		for (Product product : productPage.getContent()) {
+			products.add(ProductVO.valueOf(product.getProductName(),
+					product.getProductUnit(), product.getUnitPrices()));
+		}
+		return products;
 	}
 }

@@ -1,8 +1,13 @@
 package in.retalemine.view.component;
 
+import in.retalemine.constants.MongoDBKeys;
+import in.retalemine.entity.Product;
 import in.retalemine.measure.unit.BillingUnits;
+import in.retalemine.repository.ProductRepository;
+import in.retalemine.util.ApplicationContextProvider;
 import in.retalemine.util.ComputationUtil;
 import in.retalemine.util.InputParser;
+import in.retalemine.util.VOConverterUtil;
 import in.retalemine.view.VO.ProductVO;
 import in.retalemine.view.constants.BillingConstants;
 import in.retalemine.view.event.BillItemSelectionEvent;
@@ -11,11 +16,19 @@ import in.retalemine.view.event.ProductSelectionEvent;
 import in.retalemine.view.event.RateSelectionEvent;
 import in.retalemine.view.event.ResetBillingEvent;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.measure.Measure;
 import javax.measure.quantity.Quantity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -43,6 +56,8 @@ public class ProductComboBox extends ComboBox {
 	private BeanContainer<String, ProductVO<? extends Quantity>> container = new BeanContainer<String, ProductVO<? extends Quantity>>(
 			ProductVO.class);
 
+	private ProductRepository productRepository;
+
 	public ProductComboBox(final EventBus eventBus) {
 
 		logger.info("Initializing {}", getClass().getSimpleName());
@@ -51,7 +66,7 @@ public class ProductComboBox extends ComboBox {
 		container.setBeanIdProperty(BillingConstants.PID_PRODUCT_DESCRIPTION);
 		setContainerDataSource(container);
 		setPageLength(15);
-		setFilteringMode(FilteringMode.CONTAINS);
+		setFilteringMode(FilteringMode.STARTSWITH);
 		setNullSelectionAllowed(true);
 		setImmediate(true);
 		setNewItemsAllowed(true);
@@ -113,6 +128,37 @@ public class ProductComboBox extends ComboBox {
 			}
 		});
 
+		productRepository = (ProductRepository) ApplicationContextProvider
+				.getApplicationContext().getBean("productRepository");
+
+	}
+
+	@Override
+	public void changeVariables(Object source, Map<String, Object> variables) {
+		logger.info("ChangeVariables");
+		String filterString = ((String) variables.get("filter"));
+		if (null != filterString) {
+			int length = filterString.trim().length();
+			if (length > 0 && length % 4 == 1) {
+				try {
+					Pageable pageable = new PageRequest(0, 50, new Sort(
+							Direction.ASC, MongoDBKeys.ID));
+					Page<Product> productPage = productRepository
+							.findByProductIdRegex(filterString, pageable);
+					if (productPage.hasContent()) {
+						List<ProductVO<? extends Quantity>> products = VOConverterUtil
+								.constructProductVOObjects(productPage);
+						container.removeAllItems();
+						for (ProductVO<? extends Quantity> product : products) {
+							container.addBean(product);
+						}
+					}
+				} catch (Exception e) {
+					logger.error("{}", e.getMessage());
+				}
+			}
+		}
+		super.changeVariables(source, variables);
 	}
 
 	private void productModalWindow(String productName, String quantity) {
