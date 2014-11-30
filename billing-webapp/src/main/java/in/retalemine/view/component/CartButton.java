@@ -89,6 +89,10 @@ public class CartButton extends Button {
 	public void listenProductSelectionEvent(final ProductSelectionEvent event) {
 		logger.info("Event - {} : handler - {} : value - {}", event.getClass()
 				.getSimpleName(), getClass().getSimpleName(), event.toString());
+		if (null == event.getProductVO()) {
+			resetCartButton();
+			return;
+		}
 		productVO = ProductVO.valueOf(event.getProductVO().getProductName(),
 				event.getProductVO().getProductUnit(), event.getProductVO()
 						.getUnitRates());

@@ -105,6 +105,10 @@ public class ProductComboBox extends ComboBox {
 					logger.info("{} posts ProductSelectionEvent", getClass()
 							.getSimpleName());
 					eventBus.post(new ProductSelectionEvent(productVO));
+				} else {
+					logger.info("{} posts ProductSelectionEvent", getClass()
+							.getSimpleName());
+					eventBus.post(new ProductSelectionEvent(null));
 				}
 			}
 		});

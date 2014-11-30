@@ -114,6 +114,10 @@ public class RateComboBox extends ComboBox {
 	public void listenProductSelectionEvent(final ProductSelectionEvent event) {
 		logger.info("Event - {} : handler - {} : value - {}", event.getClass()
 				.getSimpleName(), getClass().getSimpleName(), event);
+		if (null == event.getProductVO()) {
+			resetRateComboBox();
+			return;
+		}
 		if (reset) {
 			container.removeAllItems();
 			if (null != event.getProductVO().getUnitRates()) {

@@ -19,6 +19,8 @@ Billing Webapp Module:
      * ProductSelectionEvent
        * Product [Name,Unit]
        * Product [Name,Unit,UnitRates]
+     * ProductSelectionEvent
+       * null       
 
  * RateComboBox     
    * Holds unitRates __ 145.50 INR__
