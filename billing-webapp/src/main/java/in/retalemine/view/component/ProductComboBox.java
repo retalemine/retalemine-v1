@@ -144,7 +144,7 @@ public class ProductComboBox extends ComboBox {
 					Pageable pageable = new PageRequest(0, 50, new Sort(
 							Direction.ASC, MongoDBKeys.ID));
 					Page<Product> productPage = productRepository
-							.findByProductIdRegex(filterString, pageable);
+							.findByProductIdRegex("^" + filterString, pageable);
 					if (productPage.hasContent()) {
 						List<ProductVO<? extends Quantity>> products = VOConverterUtil
 								.constructProductVOObjects(productPage);
