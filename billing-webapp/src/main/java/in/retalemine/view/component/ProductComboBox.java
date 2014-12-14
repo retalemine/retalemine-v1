@@ -134,6 +134,25 @@ public class ProductComboBox extends ComboBox {
 	}
 
 	@Override
+	protected List<?> getOptionsWithFilter(boolean needNullSelectOption) {
+		logger.info("getOptionsWithFilter");
+		return super.getOptionsWithFilter(needNullSelectOption);
+	}
+
+	@Override
+	protected Filter buildFilter(String filterString,
+			FilteringMode filteringMode) {
+		logger.info("buildFilter");
+		return super.buildFilter(filterString, filteringMode);
+	}
+
+	@Override
+	protected List<?> getFilteredOptions() {
+		logger.info("getFilteredOptions");
+		return super.getFilteredOptions();
+	}
+
+	@Override
 	public void changeVariables(Object source, Map<String, Object> variables) {
 		logger.info("ChangeVariables");
 		String filterString = ((String) variables.get("filter"));

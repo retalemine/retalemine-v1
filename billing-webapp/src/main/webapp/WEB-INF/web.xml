@@ -17,8 +17,25 @@
 	<context-param>
 		<description>Vaadin production mode</description>
 		<param-name>productionMode</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
+	<servlet>
+		<servlet-name>PrintUI</servlet-name>
+		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+		<init-param>
+			<description>Vaadin UI</description>
+			<param-name>UI</param-name>
+			<param-value>in.retalemine.view.UI.PrintBillUI</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PrintUI</servlet-name>
+		<url-pattern>/billing/print/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PrintUI</servlet-name>
+		<url-pattern>/VAADIN/*</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>BillingUI</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>

@@ -7,6 +7,7 @@ import in.retalemine.util.ApplicationContextProvider;
 import in.retalemine.util.BillingComputationUtil;
 import in.retalemine.util.ComputationUtil;
 import in.retalemine.util.VOConverterUtil;
+import in.retalemine.view.UI.PrintBillUI;
 import in.retalemine.view.VO.BillVO;
 import in.retalemine.view.VO.PaymentMode;
 import in.retalemine.view.VO.TaxVO;
@@ -36,6 +37,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -57,7 +59,7 @@ public class BillProcessing extends HorizontalLayout {
 	private TaxVO taxVO = null;
 	private Button resetBill;
 	private Button draftBill;
-	private Button printBill;
+	private Button saveBill;
 
 	private BillRepository billRepository;
 	private MongoTemplate mongoTemplate;
@@ -105,12 +107,12 @@ public class BillProcessing extends HorizontalLayout {
 			}
 		});
 
-		printBill = new Button();
-		printBill.setCaption(BillingConstants.PRINT);
-		printBill.setWidth("100%");
-		printBill.setEnabled(false);
-		printBill.setImmediate(true);
-		printBill.addClickListener(new Button.ClickListener() {
+		saveBill = new Button();
+		saveBill.setCaption(BillingConstants.SAVE);
+		saveBill.setWidth("100%");
+		saveBill.setEnabled(false);
+		saveBill.setImmediate(true);
+		saveBill.addClickListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 8093769158458975223L;
 
 			@Override
@@ -149,7 +151,7 @@ public class BillProcessing extends HorizontalLayout {
 
 		addComponent(resetBill);
 		addComponent(draftBill);
-		addComponent(printBill);
+		addComponent(saveBill);
 
 		billRepository = (BillRepository) ApplicationContextProvider
 				.getApplicationContext().getBean("billRepository");
@@ -162,7 +164,7 @@ public class BillProcessing extends HorizontalLayout {
 	private void enableBillProcessing(Boolean enabled) {
 		resetBill.setEnabled(enabled);
 		// draftBill.setEnabled(enabled);
-		printBill.setEnabled(enabled);
+		saveBill.setEnabled(enabled);
 	}
 
 	@Subscribe
@@ -218,6 +220,8 @@ public class BillProcessing extends HorizontalLayout {
 		final TextField payBackAmt = new TextField();
 		final HorizontalLayout footerHL = new HorizontalLayout();
 		final Button printBill = new Button();
+		final BrowserWindowOpener printWindow = new BrowserWindowOpener(
+				PrintBillUI.class, BillingConstants.URI_PRINT);
 
 		billAmt.setCaption(BillingConstants.BILLABLE_AMT);
 		billAmt.setWidth("100%");
@@ -290,7 +294,7 @@ public class BillProcessing extends HorizontalLayout {
 		payBackAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
 				Amount.valueOf(0.0, BillingUnits.INR)));
 
-		printBill.setCaption(BillingConstants.PRINT);
+		printBill.setCaption(BillingConstants.CONFIRM);
 		printBill.setSizeUndefined();
 		printBill.setImmediate(true);
 		printBill.setEnabled(false);
@@ -300,23 +304,31 @@ public class BillProcessing extends HorizontalLayout {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Date todaysDate = new Date();
-				billVO.setBillDate(todaysDate);
-				billVO.setIsPaid(true);
-				billVO.setPaidDate(todaysDate);
-				// TODO save the bill and print it
-				// TODO keep the modal with progress bar depicting save and
-				// print
-				// TODO call the reset event on successful save and print
-				Bill bill = VOConverterUtil.constructBillObject(billVO);
-				bill = billRepository.insert(bill, mongoTemplate);
-				logger.info("BillVO {}", billVO);
-				logger.info("{} posts ResetBillingEvent", getClass()
-						.getSimpleName());
-				Notification.show(bill.getBillNo(), "Bill Saved Successfully",
-						Type.TRAY_NOTIFICATION);
-				eventBus.post(new ResetBillingEvent());
-				cashWindow.close();
+				if (BillingConstants.CONFIRM.equals(event.getButton()
+						.getCaption())) {
+					Date todaysDate = new Date();
+					billVO.setBillDate(todaysDate);
+					billVO.setIsPaid(true);
+					billVO.setPaidDate(todaysDate);
+					Bill bill = VOConverterUtil.constructBillObject(billVO);
+					bill = billRepository.insert(bill, mongoTemplate);
+					logger.info("BillVO {}", billVO);
+					Notification.show(bill.getBillNo(),
+							"Bill Saved Successfully", Type.TRAY_NOTIFICATION);
+					event.getButton().setCaption(BillingConstants.PRINT);
+					printWindow.setFeatures("resizable=yes");
+					printWindow.setParameter("billNo", bill.getBillNo());
+					printWindow.extend(printBill);
+				} else if (BillingConstants.PRINT.equals(event.getButton()
+						.getCaption())) {
+					// TODO print the bill
+					// TODO keep the modal with progress bar depicting print
+					// TODO call the reset event on successful save and print
+					logger.info("{} posts ResetBillingEvent", getClass()
+							.getSimpleName());
+					eventBus.post(new ResetBillingEvent());
+					cashWindow.close();
+				}
 			}
 		});
 

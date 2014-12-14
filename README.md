@@ -49,6 +49,7 @@ mvn archetype:generate \
  * mvn compile -DskipTests=true __skips execution__
  * mvn test-compile
  * mvn compiler:testCompile
+ * mvn -Dtest=ComputationUtilTest test
  * mvn test
  * mvn surefire:test
  * mvn install

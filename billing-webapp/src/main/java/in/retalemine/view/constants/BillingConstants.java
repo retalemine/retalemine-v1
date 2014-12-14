@@ -52,6 +52,8 @@ public interface BillingConstants {
 	public static final String PAY_DELAYED = "Delayed";
 	public static final String HOME_DELIVERY = "Home delivery";
 
+	public static final String SAVE = "Save";
+	public static final String CONFIRM = "Confirm Payment";
 	public static final String PRINT = "Print";
 	public static final String DRAFT = "Draft";
 	public static final String RESET = "Reset";
@@ -61,5 +63,7 @@ public interface BillingConstants {
 	public static final String ROUNDED_AMT = "Rounded Amount";
 	public static final String RECEIVED_AMT = "Received Amount";
 	public static final String PAYBACK_AMT = "Payback Amount";
+
+	public static final String URI_PRINT = "billing/print";
 
 }
