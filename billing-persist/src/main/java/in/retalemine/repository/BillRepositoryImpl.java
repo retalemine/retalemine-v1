@@ -3,11 +3,10 @@ package in.retalemine.repository;
 import in.retalemine.entity.Bill;
 import in.retalemine.util.BillNoUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-public class BillRepositoryImpl implements BillBaseRepository<Bill, Integer> {
+public class BillRepositoryImpl implements BillBaseRepository<Bill, String> {
 
 	@Override
 	public Bill insert(Bill entity, MongoTemplate mongoTemplate) {

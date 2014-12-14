@@ -1,11 +1,18 @@
 package in.retalemine.view.UI;
 
+import in.retalemine.constants.MongoDBKeys;
+import in.retalemine.entity.Bill;
+import in.retalemine.repository.BillRepository;
+import in.retalemine.util.ApplicationContextProvider;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
@@ -53,14 +60,21 @@ public class PrintBillUI extends UI {
 		private static final long serialVersionUID = 5436511090062056105L;
 
 		private final ByteArrayOutputStream oStream = new ByteArrayOutputStream();
+		private BillRepository billRepository;
 
 		public PdfBill(String billNo) {
+
+			billRepository = (BillRepository) ApplicationContextProvider
+					.getApplicationContext().getBean("billRepository");
+			Bill bill = billRepository.findOne(new Query().addCriteria(Criteria
+					.where(MongoDBKeys.BILL_NO).is(billNo)), Bill.class);
+
 			Document document = null;
 			try {
 				document = new Document(new Rectangle(330, 380));
 				PdfWriter.getInstance(document, oStream);
 				document.open();
-				document.add(new Paragraph(billNo));
+				document.add(new Paragraph(bill.getBillNo()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
