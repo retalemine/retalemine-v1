@@ -228,9 +228,22 @@ public class ComputationUtil {
 				.getValue() / unitQuantity.getValue());
 	}
 
+	public static Measure<Double, ? extends Quantity> getUnitQuantity(
+			String productDescription) {
+		String values[] = InputParser.resolveProductUnit(productDescription);
+		Measure<Double, ? extends Quantity> unitQuantity = Measure.valueOf(
+				Double.parseDouble(values[1]), BillingUnits.valueOf(values[2]));
+		return unitQuantity;
+	}
+
 	public static Double computeClearAmount(Text amount) {
 		String values[] = String.valueOf(amount).split("\\s");
 		return Double.parseDouble(values[0]);
+	}
+
+	public static Amount<Money> computeRoundedAmount(Amount<Money> amount) {
+		return Amount.valueOf(amount.longValue(amount.getUnit()),
+				amount.getUnit());
 	}
 
 	public static Boolean isEmpty(Object obj) {

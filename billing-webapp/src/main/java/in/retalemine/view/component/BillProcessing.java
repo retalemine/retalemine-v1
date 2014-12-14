@@ -236,10 +236,7 @@ public class BillProcessing extends HorizontalLayout {
 		roundedBillAmt.setStyleName("v-textfield-align-right");
 		roundedBillAmt.setConverter(new AmountConverter());
 		roundedBillAmt.setPropertyDataSource(new ObjectProperty<Amount<Money>>(
-				Amount.valueOf(
-						billVO.getTotal()
-								.longValue(billVO.getTotal().getUnit()), billVO
-								.getTotal().getUnit())));
+				ComputationUtil.computeRoundedAmount(billVO.getTotal())));
 		roundedBillAmt.setReadOnly(true);
 
 		receivedAmt.setCaption(BillingConstants.RECEIVED_AMT);
@@ -265,20 +262,27 @@ public class BillProcessing extends HorizontalLayout {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void valueChange(Property.ValueChangeEvent event) {
-				if (null != event.getProperty().getValue()
-						&& !((String) event.getProperty().getValue()).isEmpty()) {
-					Amount<Money> receivedMoney = (Amount<Money>) receivedAmt
-							.getPropertyDataSource().getValue();
-					Amount<Money> roundedMoney = (Amount<Money>) roundedBillAmt
-							.getPropertyDataSource().getValue();
-					if (-1 != receivedMoney.compareTo(roundedMoney)) {
-						payBackAmt.getPropertyDataSource().setValue(
-								receivedMoney.minus(roundedMoney));
-						printBill.setEnabled(true);
+				if (null != event.getProperty().getValue()) {
+					if (!((String) event.getProperty().getValue()).isEmpty()) {
+						Amount<Money> receivedMoney = (Amount<Money>) receivedAmt
+								.getPropertyDataSource().getValue();
+						Amount<Money> roundedMoney = (Amount<Money>) roundedBillAmt
+								.getPropertyDataSource().getValue();
+						if (-1 != receivedMoney.compareTo(roundedMoney)) {
+							payBackAmt.getPropertyDataSource().setValue(
+									receivedMoney.minus(roundedMoney));
+							printBill.setEnabled(true);
+						} else {
+							Notification.show("Cash not enough!",
+									receivedMoney.toString(),
+									Type.TRAY_NOTIFICATION);
+							printBill.setEnabled(false);
+						}
 					} else {
-						Notification.show("Cash not enough!",
-								receivedMoney.toString(),
-								Type.TRAY_NOTIFICATION);
+						payBackAmt.getPropertyDataSource().setValue(
+								((Amount<Money>) payBackAmt
+										.getPropertyDataSource().getValue())
+										.times(0));
 						printBill.setEnabled(false);
 					}
 				}

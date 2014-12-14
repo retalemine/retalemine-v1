@@ -66,4 +66,7 @@ public interface BillingConstants {
 
 	public static final String URI_PRINT = "billing/print";
 
+	public static final String FORMAT_DATE = "dd/MM/yy";
+	public static final String FORMAT_TIME = "hh:mm:ss a";
+
 }

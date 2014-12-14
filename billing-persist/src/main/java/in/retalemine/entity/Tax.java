@@ -16,4 +16,12 @@ public class Tax {
 		this.taxPercent = taxPercent;
 	}
 
+	public TaxType getTaxType() {
+		return taxType;
+	}
+
+	public Double getTaxPercent() {
+		return taxPercent;
+	}
+
 }

@@ -5,7 +5,9 @@ import in.retalemine.view.VO.BillItemVO;
 import in.retalemine.view.VO.TaxVO;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -82,5 +84,9 @@ public class BillingComputationUtil {
 				webBrowser.getTimezoneOffset(), "client timezone");
 		dateTimeFormat.setTimeZone(clientTimeZone);
 		return dateTimeFormat.format(webBrowser.getCurrentDate());
+	}
+
+	public static String getDateTimeFormat(Date date, String format) {
+		return new SimpleDateFormat(format).format(date);
 	}
 }

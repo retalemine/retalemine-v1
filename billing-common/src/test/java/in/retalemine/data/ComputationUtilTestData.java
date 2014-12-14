@@ -127,10 +127,33 @@ public class ComputationUtilTestData {
 		return constructAmountData(inValidDatas, 3);
 	}
 
+	@DataProvider(name = "getUnitData")
+	public static Object[][] getUnitData() {
+		Object[][] validDatas = new Object[][] {
+
+		{ "sugar12kg", computeQuantityMeasure("12kg") }
+
+		};
+		return validDatas;
+	}
+
 	@DataProvider(name = "amountTextData")
 	public static Object[][] amountTextData() {
 		return new Object[][] { { "100 INR", 100.00 }, { "100.50 INR", 100.5 },
 				{ "125.75 USD", 125.75 } };
+	}
+
+	@DataProvider(name = "roundedAmountData")
+	public static Object[][] roundedAmountData() {
+
+		Object[][] validDatas = new Object[][] {
+
+		{ Amount.valueOf(44.5, BillingUnits.INR),
+				Amount.valueOf(45.0, BillingUnits.INR) }
+
+		};
+
+		return validDatas;
 	}
 
 	private static Measure<Double, ? extends Quantity> computeQuantityMeasure(

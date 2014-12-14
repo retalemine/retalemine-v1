@@ -67,4 +67,36 @@ public class Bill {
 		return id;
 	}
 
+	public Date getBillDate() {
+		return billDate;
+	}
+
+	public List<BillItem> getBillItems() {
+		return billItems;
+	}
+
+	public Amount<Money> getSubTotal() {
+		return subTotal;
+	}
+
+	public List<Tax> getTaxes() {
+		return taxes;
+	}
+
+	public Amount<Money> getTotal() {
+		return total;
+	}
+
+	public Payment getPaymentDetails() {
+		return paymentDetails;
+	}
+
+	public Customer getCustomerDetails() {
+		return customerDetails;
+	}
+
+	public Boolean getIsDoorDelivery() {
+		return isDoorDelivery;
+	}
+
 }

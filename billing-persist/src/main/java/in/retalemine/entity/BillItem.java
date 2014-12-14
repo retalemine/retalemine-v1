@@ -49,4 +49,16 @@ public class BillItem {
 				unitPrice, quantity, amount);
 	}
 
+	public String getProductDescription() {
+		return productDescription;
+	}
+
+	public Amount<Money> getUnitPrice() {
+		return unitPrice;
+	}
+
+	public Measure<Double, ? extends Quantity> getQuantity() {
+		return quantity;
+	}
+
 }

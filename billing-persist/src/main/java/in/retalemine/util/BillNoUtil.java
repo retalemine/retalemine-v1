@@ -7,7 +7,6 @@ import java.util.TimeZone;
 
 public class BillNoUtil {
 
-	private static final int i = 0;
 	private static final String yearMapper = "0IHGFEDCBA";
 	public static final int suffixLen = 4;
 

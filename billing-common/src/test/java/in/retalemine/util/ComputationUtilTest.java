@@ -137,9 +137,24 @@ public class ComputationUtilTest {
 		ComputationUtil.computeAmount(unitQuantity, unitRate, netQuantity);
 	}
 
+	@Test(enabled = true, dataProvider = "getUnitData", dataProviderClass = ComputationUtilTestData.class)
+	public void test_getUnitQuantity(String desc,
+			Measure<Double, ? extends Quantity> unitQuantity) {
+		Assert.assertEquals(ComputationUtil.getUnitQuantity(desc).toString(),
+				unitQuantity.toString());
+	}
+
 	@Test(enabled = true, dataProvider = "amountTextData", dataProviderClass = ComputationUtilTestData.class)
 	public void test_computeClearAmount(String input, Double result) {
 		Assert.assertEquals(
 				ComputationUtil.computeClearAmount(new Text(input)), result);
 	}
+
+	@Test(enabled = true, dataProvider = "roundedAmountData", dataProviderClass = ComputationUtilTestData.class)
+	public void test_computeRoundedAmount(Amount<Money> input,
+			Amount<Money> result) {
+		Assert.assertEquals(ComputationUtil.computeRoundedAmount(input)
+				.toText(), result.toText());
+	}
+
 }
