@@ -1,6 +1,5 @@
 package in.retalemine.view.component;
 
-import in.retalemine.constants.MongoDBKeys;
 import in.retalemine.entity.Product;
 import in.retalemine.measure.unit.BillingUnits;
 import in.retalemine.repository.ProductRepository;
@@ -24,11 +23,6 @@ import javax.measure.quantity.Quantity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -93,8 +87,16 @@ public class ProductComboBox extends ComboBox {
 								+ BillingConstants.PRODUCT_DESC_DIVIDER
 								+ productUnit;
 						if (!container.containsId(productDescription)) {
-							ProductVO<? extends Quantity> productVO = ProductVO
-									.valueOf(result[0], productUnit, null);
+							ProductVO<? extends Quantity> productVO = null;
+							Product product = productRepository
+									.findOne(productDescription);
+							if (null != product) {
+								productVO = VOConverterUtil
+										.constructProductVOObject(product);
+							} else {
+								productVO = ProductVO.valueOf(result[0],
+										productUnit, null);
+							}
 							container.addBean(productVO);
 						}
 						setValue(productDescription);
@@ -155,28 +157,6 @@ public class ProductComboBox extends ComboBox {
 	@Override
 	public void changeVariables(Object source, Map<String, Object> variables) {
 		logger.info("ChangeVariables");
-		String filterString = ((String) variables.get("filter"));
-		if (null != filterString) {
-			int length = filterString.trim().length();
-			if (length > 0 && length % 4 == 1) {
-				try {
-					Pageable pageable = new PageRequest(0, 50, new Sort(
-							Direction.ASC, MongoDBKeys.ID));
-					Page<Product> productPage = productRepository
-							.findByProductIdRegex("^" + filterString, pageable);
-					if (productPage.hasContent()) {
-						List<ProductVO<? extends Quantity>> products = VOConverterUtil
-								.constructProductVOObjects(productPage);
-						container.removeAllItems();
-						for (ProductVO<? extends Quantity> product : products) {
-							container.addBean(product);
-						}
-					}
-				} catch (Exception e) {
-					logger.error("{}", e.getMessage());
-				}
-			}
-		}
 		super.changeVariables(source, variables);
 	}
 

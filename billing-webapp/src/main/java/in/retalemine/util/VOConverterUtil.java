@@ -105,4 +105,11 @@ public class VOConverterUtil {
 		}
 		return products;
 	}
+
+	public static ProductVO<? extends Quantity> constructProductVOObject(
+			Product product) {
+		return ProductVO.valueOf(product.getProductName(),
+				product.getProductUnit(), product.getUnitPrices());
+	}
+
 }

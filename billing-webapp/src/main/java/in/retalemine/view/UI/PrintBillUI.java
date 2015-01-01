@@ -112,7 +112,7 @@ public class PrintBillUI extends UI {
 
 				Paragraph billHeader = new Paragraph(
 						"Retalemine Billing Solutions\n", fontTimesRoman);
-				billHeader.add(new Phrase("mail: retalsmart@gmail.com"));
+				billHeader.add(new Phrase("mail: retalemine@retalemine.com"));
 				billHeader.setAlignment(Element.ALIGN_CENTER);
 				billHeader.setSpacingBefore(0f);
 				billHeader.setSpacingAfter(5f);
