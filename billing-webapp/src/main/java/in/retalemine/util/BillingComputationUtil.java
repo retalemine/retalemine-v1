@@ -89,4 +89,14 @@ public class BillingComputationUtil {
 	public static String getDateTimeFormat(Date date, String format) {
 		return new SimpleDateFormat(format).format(date);
 	}
+
+	public static String getClientDateTimeFormat(Date date,
+			String dateTimeFormat) {
+		WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
+		SimpleTimeZone clientTimeZone = new SimpleTimeZone(
+				webBrowser.getTimezoneOffset(), "client timezone");
+		DateFormat format = new SimpleDateFormat(dateTimeFormat);
+		format.setTimeZone(clientTimeZone);
+		return format.format(date);
+	}
 }

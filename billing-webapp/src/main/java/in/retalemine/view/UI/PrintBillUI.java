@@ -128,10 +128,10 @@ public class PrintBillUI extends UI {
 
 				billInfo.addCell(contentPdfPCell("Date & Time:"));
 				billInfo.addCell(contentPdfPCell(BillingComputationUtil
-						.getDateTimeFormat(bill.getBillDate(),
+						.getClientDateTimeFormat(bill.getBillDate(),
 								BillingConstants.FORMAT_DATE)
 						+ " & "
-						+ BillingComputationUtil.getDateTimeFormat(
+						+ BillingComputationUtil.getClientDateTimeFormat(
 								bill.getBillDate(),
 								BillingConstants.FORMAT_TIME)));
 
