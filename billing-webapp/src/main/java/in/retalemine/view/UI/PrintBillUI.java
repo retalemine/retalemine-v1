@@ -95,7 +95,7 @@ public class PrintBillUI extends UI {
 			DecimalFormat amountFormat = new DecimalFormat("0.00");
 
 			Rectangle billPage = new Rectangle(224f, getBillHeight(bill));
-			fontTimesRoman = new Font(FontFamily.TIMES_ROMAN, 8f, Font.NORMAL);
+			fontTimesRoman = new Font(FontFamily.TIMES_ROMAN, 7f, Font.NORMAL);
 			try {
 				document = new Document(billPage, 8f, 8f, 0f, 0f);
 				PdfWriter.getInstance(document, oStream);
@@ -111,8 +111,8 @@ public class PrintBillUI extends UI {
 				document.open();
 
 				Paragraph billHeader = new Paragraph(
-						"Retalemine Billing Solutions\n", fontTimesRoman);
-				billHeader.add(new Phrase("mail: retalemine@retalemine.com"));
+						"RETALEMINE BILLING SOLUTIONS\n", fontTimesRoman);
+				billHeader.add(new Phrase("MAIL: RETALEMINE@RETALEMINE.COM"));
 				billHeader.setAlignment(Element.ALIGN_CENTER);
 				billHeader.setSpacingBefore(0f);
 				billHeader.setSpacingAfter(5f);
@@ -123,10 +123,10 @@ public class PrintBillUI extends UI {
 				billInfo.setWidths(new int[] { 1, 2 });
 
 				billInfo.addCell(dottedLinePdfPCell());
-				billInfo.addCell(contentPdfPCell("Bill No:"));
+				billInfo.addCell(contentPdfPCell("BILL NO:"));
 				billInfo.addCell(contentPdfPCell(bill.getBillNo()));
 
-				billInfo.addCell(contentPdfPCell("Date & Time:"));
+				billInfo.addCell(contentPdfPCell("DATE & TIME:"));
 				billInfo.addCell(contentPdfPCell(BillingComputationUtil
 						.getClientDateTimeFormat(bill.getBillDate(),
 								BillingConstants.FORMAT_DATE)
@@ -142,9 +142,9 @@ public class PrintBillUI extends UI {
 				billContent.setWidths(new float[] { 2.5f, 8.5f, 3 });
 
 				billContent.addCell(dottedLinePdfPCell());
-				billContent.addCell(contentPdfPCell("Qty"));
-				billContent.addCell(contentPdfPCell("Product Name"));
-				billContent.addCell(contentPdfPCell("Amount",
+				billContent.addCell(contentPdfPCell("QTY"));
+				billContent.addCell(contentPdfPCell("PRODUCT NAME"));
+				billContent.addCell(contentPdfPCell("AMOUNT",
 						Element.ALIGN_RIGHT));
 				billContent.addCell(dottedLinePdfPCell());
 				for (BillItem item : bill.getBillItems()) {
@@ -168,11 +168,11 @@ public class PrintBillUI extends UI {
 				document.add(billContent);
 
 				PdfPTable billValues = new PdfPTable(2);
-				billValues.setWidthPercentage(75f);
+				billValues.setWidthPercentage(80f);
 				billValues.setHorizontalAlignment(Element.ALIGN_RIGHT);
 				billValues.setWidths(new float[] { 1.5f, 1 });
 
-				billValues.addCell(contentPdfPCell("Sub Total :",
+				billValues.addCell(contentPdfPCell("SUB TOTAL :",
 						Element.ALIGN_RIGHT));
 				billValues.addCell(contentPdfPCell(amountFormat
 						.format(ComputationUtil.computeClearAmount(subTotal
@@ -195,7 +195,7 @@ public class PrintBillUI extends UI {
 				}
 
 				billValues.addCell(dottedLinePdfPCell(35f));
-				billValues.addCell(contentPdfPCell("Grand Total (rounded) :",
+				billValues.addCell(contentPdfPCell("GRAND TOTAL (ROUNDED) :",
 						Element.ALIGN_RIGHT));
 				billValues.addCell(contentPdfPCell(amountFormat
 						.format(ComputationUtil
@@ -206,7 +206,7 @@ public class PrintBillUI extends UI {
 
 				document.add(billValues);
 
-				Paragraph billFooter = new Paragraph("Thank You, Visit Again!",
+				Paragraph billFooter = new Paragraph("THANK YOU, VISIT AGAIN!",
 						fontTimesRoman);
 				billFooter.setAlignment(Element.ALIGN_CENTER);
 				document.add(billFooter);
@@ -234,11 +234,13 @@ public class PrintBillUI extends UI {
 		}
 
 		private PdfPCell contentPdfPCell(String value) {
-			return contentPdfPCell(new Paragraph(value, fontTimesRoman));
+			return contentPdfPCell(new Paragraph(value.toUpperCase(),
+					fontTimesRoman));
 		}
 
 		private PdfPCell contentPdfPCell(String value, int alignRight) {
-			Paragraph content = new Paragraph(value, fontTimesRoman);
+			Paragraph content = new Paragraph(value.toUpperCase(),
+					fontTimesRoman);
 			content.setAlignment(alignRight);
 			return contentPdfPCell(content);
 		}
