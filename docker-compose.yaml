@@ -1,0 +1,39 @@
+version: '3'
+services:
+  web:
+    container_name: web-v1
+    image: tomcat:9-jre8
+    #user: subhu
+    restart: always
+    ports:
+      - 8888:8080
+    volumes:
+      - ./billing-webapp/target/retalemine-v1.war:/usr/local/tomcat/webapps/retalemine-v1.war
+    #environment:
+      #- "JAVA_OPTS=-javaagent:/xrebel.jar -Dmongo.host=mongodb"
+    depends_on:
+      - mongodb
+    hostname: web-v1
+    links:
+      - mongodb
+    #networks:
+    #  - webnet
+  mongodb:
+    container_name: mongodb
+    image: mongo:4
+    volumes:
+      - ./db-data:/data/db
+    ports:
+      - "27017:27017"
+    hostname: mongodb  
+    #networks:
+    #  - webnet
+    #command: -smallfiles -nojournal
+#networks:
+#  webnet:
+
+# network interfaces
+#net:
+#      port: 27017
+#      bindIp : [127.0.0.1,0.0.0.0]
+#However 0.0.0.0 opens up. While this is ok for TESTING, for production you should know the security implications of this setting!
